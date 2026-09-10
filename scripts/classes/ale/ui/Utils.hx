@@ -17,9 +17,7 @@ import ale.ui.Config;
 class Utils
 {
     public static function roundSprite(width:Float, height:Float, ?color:FlxColor):Sprite
-    {
         return new Sprite(0, 0, roundGraphic(width, height, color));
-    }
 
     public static function roundGraphic(width:Float, height:Float, ?color:FlxColor):FlxGraphic
     {
@@ -44,7 +42,7 @@ class Utils
     }
 
 
-    public static function label(?lab:String, follow:FlxObject):FlxText
+    public static function label(?lab:String = 'Label', follow:FlxObject):FlxText
     {
         lab ??= 'Label';
 
@@ -74,23 +72,17 @@ class Utils
     }
 
     public static function adjust(width:Float, height:Float):{x:Float, y:Float}
-    {
         return {
             x: Math.max(1, width) * Config.SIZE,
             y: Math.max(1, height) * Config.SIZE
         };
-    }
 
 
     public static function light(percent:Float, ?a:FlxColor):FlxColor
-    {
         return mix(FlxColor.WHITE, percent, a);
-    }
 
     public static function dark(percent:Float, ?a:FlxColor):FlxColor
-    {
         return mix(FlxColor.BLACK, percent, a);
-    }
 
     public static function mix(b:FlxColor, percent:Float, ?a:FlxColor):FlxColor
     {

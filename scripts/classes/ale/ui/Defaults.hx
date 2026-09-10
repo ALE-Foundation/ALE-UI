@@ -13,17 +13,11 @@ class Defaults
     // ts should be on Utils
 
     static function light(col1, perc):FlxColor
-    {
         return mix(col1, FlxColor.WHITE, perc);
-    }
 
     static function gray(col1, perc):FlxColor
-    {
         return mix(col1, FlxColor.GRAY, perc);
-    }
 
     static function mix(col1, col2, perc):FlxColor
-    {
         return FlxColor.interpolate(col1, col2, perc);
-    }
 }

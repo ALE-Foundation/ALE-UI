@@ -22,12 +22,9 @@ class Button extends MouseSpriteGroup
 
 	public var callback:Void -> Void;
     
-    public function new(?x:Float, ?y:Float, ?text:String, ?callback:Void -> Void, ?width:Float = 3, ?height:Int = 1, ?color:FlxColor)
+    public function new(?x:Float, ?y:Float, ?text:String, ?callback:Void -> Void, ?width:Float = 4, ?height:Int = 1, ?color:FlxColor)
     {
         super(x, y);
-
-        width ??= 4;
-        height ??= 1;
 
         bg = Utils.roundSprite(width, height, color);
         add(bg);
