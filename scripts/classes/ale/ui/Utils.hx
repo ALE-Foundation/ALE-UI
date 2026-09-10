@@ -32,8 +32,8 @@ class Utils
         
         final shape:Shape = new Shape();
         shape.graphics.beginGradientFill(GradientType.LINEAR, [dark(0.5, color), dark(0.7, color)], [1, 1], [0, 255], matrix);
-        shape.graphics.lineStyle(1.5, Config.OUTLINE_COLOR);
-        shape.graphics.drawRoundRect(0.75, 0.75, size.x - 1.5, size.y - 1.5, Config.SIZE / 2);
+        shape.graphics.lineStyle(Config.OUTLINE_SIZE, Config.OUTLINE_COLOR);
+        shape.graphics.drawRoundRect(Config.OUTLINE_SIZE / 2, Config.OUTLINE_SIZE / 2, size.x - Config.OUTLINE_SIZE, size.y - Config.OUTLINE_SIZE, Config.SIZE / 2);
         shape.graphics.endFill();
         
         bitmap.draw(shape);
@@ -46,7 +46,7 @@ class Utils
     {
         lab ??= 'Label';
 
-        final text:FlxText = new FlxText(0, 0, follow.width, lab, Math.min(follow.width, follow.height) * Config.FONT_SCALE);
+        final text:FlxText = new FlxText(0, 0, follow.width, lab, Math.min(follow.width, follow.height) * Config.FONT_SIZE);
         text.color = Config.FONT_COLOR;
         text.font = Config.FONT;
         text.alignment = 'center';
