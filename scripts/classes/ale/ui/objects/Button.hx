@@ -8,9 +8,9 @@ class Button extends MouseSpriteGroup
 {
     var bg:FlxSprite;
     
-    public function new(?width:Float = 3, ?height:Int = 1, ?color:FlxColor)
+    public function new(?x:Float, ?y:Float, ?width:Float = 3, ?height:Int = 1, ?color:FlxColor)
     {
-        super();
+        super(x, y);
 
         width ??= 4;
         height ??= 1;

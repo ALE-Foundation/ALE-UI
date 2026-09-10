@@ -42,17 +42,19 @@ class Utils
 
     public static function intAdjust(width:Float, height:Float):{x:Int, y:Int}
     {
+        final data = adjust(width, height);
+
         return {
-            x: Std.int(width * Config.SIZE),
-            y: Std.int(height * Config.SIZE)
-        }
+            x: Std.int(data.x),
+            y: Std.int(data.y)
+        };
     }
 
     public static function adjust(width:Float, height:Float):{x:Float, y:Float}
     {
         return {
-            x: width * Config.SIZE,
-            y: height * Config.SIZE
+            x: Math.max(1, width) * Config.SIZE,
+            y: Math.max(1, height) * Config.SIZE
         };
     }
 
