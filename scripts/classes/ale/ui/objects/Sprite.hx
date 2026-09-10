@@ -1,17 +1,16 @@
 package ale.ui.objects;
 
-class SpriteGroup extends scripting.haxe.ScriptedFlxSpriteGroup implements ale.ui.interfaces.IObject
+class Sprite extends scripting.haxe.ScriptedFlxSprite implements ale.ui.interfaces.IObject
 {
 	public var brightness(never, set):Float;
     function set_brightness(value:Float):Float
 	{
-		for (spr in members)
-			spr.colorTransform.redOffset = spr.colorTransform.greenOffset = spr.colorTransform.blueOffset = value * 255;
+		colorTransform.redOffset = colorTransform.greenOffset = colorTransform.blueOffset = value * 255;
 		
 		return value;
 	}
-	
-    public var allowUpdate:Bool = true;
+
+	public var allowUpdate:Bool = true;
 
     override function update(elapsed:Float)
     {

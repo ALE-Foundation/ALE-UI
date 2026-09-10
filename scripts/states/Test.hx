@@ -1,4 +1,11 @@
 import ale.ui.objects.Button;
 
-final button:Button = new Button(100, 100, 'Peppino', 20, 5);
+CoolUtil.resizeGame(720 / 2, 720);
+
+MobileAPI.setOrientation('portrait');
+
+FlxG.mouse.useSystemCursor = false;
+
+final button:Button = new Button(100, 100, 'Peppino', () -> debugTrace('oso'));
+//button.disabled = true;
 add(button);

@@ -10,13 +10,15 @@ import openfl.display.Shape;
 
 import openfl.geom.Matrix;
 
+import ale.ui.objects.Sprite;
+
 import ale.ui.Config;
 
 class Utils
 {
-    public static function roundSprite(width:Float, height:Float, ?color:FlxColor):FlxSprite
+    public static function roundSprite(width:Float, height:Float, ?color:FlxColor):Sprite
     {
-        return new FlxSprite(0, 0, roundGraphic(width, height, color));
+        return new Sprite(0, 0, roundGraphic(width, height, color));
     }
 
     public static function roundGraphic(width:Float, height:Float, ?color:FlxColor):FlxGraphic

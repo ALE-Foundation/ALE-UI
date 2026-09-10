@@ -8,8 +8,21 @@ class Button extends MouseSpriteGroup
 {
     var bg:FlxSprite;
     var label:FlxText;
+
+	public var disabled(default, set):Bool;
+	public function set_disabled(value:Bool):Bool
+	{
+		if (disabled == value)
+			return disabled;
+
+		brightness = value ? -0.5 : 0;
+		
+		return disabled = value;
+	}
+
+	public var callback:Void -> Void;
     
-    public function new(?x:Float, ?y:Float, ?text:String, ?width:Float = 3, ?height:Int = 1, ?color:FlxColor)
+    public function new(?x:Float, ?y:Float, ?text:String, ?callback:Void -> Void, ?width:Float = 3, ?height:Int = 1, ?color:FlxColor)
     {
         super(x, y);
 
@@ -21,5 +34,30 @@ class Button extends MouseSpriteGroup
 
         label = Utils.label(text, bg);
         add(label);
+
+		this.callback = callback;
     }
+
+	override function overlapCallbackHandler(over:Bool):Bool
+	{
+		if (disabled)
+			return;
+		
+		brightness = over ? 0.25 : 0;
+		
+		super.overlapCallbackHandler(over);
+	}
+
+	override function pressCallbackHandler(pressed:Bool)
+	{
+		if (disabled)
+			return;
+		
+		brightness = pressed ? -0.25 : 0;
+		
+		super.pressCallbackHandler(pressed);
+
+		if (!pressed && callback != null)
+			callback();
+	}
 }
