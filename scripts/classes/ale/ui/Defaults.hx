@@ -1,0 +1,27 @@
+package ale.ui;
+
+class Defaults
+{
+    public static final COLOR:FlxColor = FlxColor.fromRGB(80, 50, 255);
+
+    public static final OUTLINE_COLOR:FlxColor = light(COLOR, 0.8);
+
+    public static final SIZE:Float = 25;
+
+    // ts should be on Utils
+
+    static function light(col1, perc):FlxColor
+    {
+        return mix(col1, FlxColor.WHITE, perc);
+    }
+
+    static function gray(col1, perc):FlxColor
+    {
+        return mix(col1, FlxColor.GRAY, perc);
+    }
+
+    static function mix(col1, col2, perc):FlxColor
+    {
+        return FlxColor.interpolate(col1, col2, perc);
+    }
+}
