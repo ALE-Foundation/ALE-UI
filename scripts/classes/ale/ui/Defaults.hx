@@ -3,10 +3,12 @@ package ale.ui;
 class Defaults
 {
     public static final COLOR:FlxColor = FlxColor.fromRGB(80, 50, 255);
-
     public static final OUTLINE_COLOR:FlxColor = light(COLOR, 0.8);
 
     public static final SIZE:Float = 25;
+
+    public static final FONT:String = Paths.font('montserrat.ttf');
+    public static final FONT_SCALE:Float = 0.7;
 
     // ts should be on Utils
 
