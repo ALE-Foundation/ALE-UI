@@ -16,10 +16,10 @@ import ale.ui.Config;
 
 class Utils
 {
-    public static function roundSprite(width:Float, height:Float, ?color:FlxColor):Sprite
-        return new Sprite(0, 0, roundGraphic(width, height, color));
+    public static function roundSprite(width:Float, height:Float, ?color:FlxColor, ?manualGradient:Array<FlxColor>, ?topLeft:Bool, ?topRight:Bool, ?bottomLeft:Bool, ?bottomRight:Bool):Sprite
+        return new Sprite(0, 0, roundGraphic(width, height, color, manualGradient));
 
-    public static function roundGraphic(width:Float, height:Float, ?color:FlxColor):FlxGraphic
+    public static function roundGraphic(width:Float, height:Float, ?color:FlxColor, ?manualGradient:Array<FlxColor>, ?topLeft:Bool = true, ?topRight:Bool = true, ?bottomLeft:Bool = true, ?bottomRight:Bool = true):FlxGraphic
     {
         color ??= Config.COLOR;
 
@@ -30,10 +30,13 @@ class Utils
         final matrix:Matrix = new Matrix();
         matrix.createGradientBox(size.x, size.y, Math.PI / 2);
         
+        function roundSize(cond:Bool):Float
+            return cond ? Config.SIZE / 4 : 0;
+
         final shape:Shape = new Shape();
-        shape.graphics.beginGradientFill(GradientType.LINEAR, [dark(0.5, color), dark(0.7, color)], [1, 1], [0, 255], matrix);
+        shape.graphics.beginGradientFill(GradientType.LINEAR, manualGradient ?? [dark(0.5, color), dark(0.7, color)], [1, 1], [0, 255], matrix);
         shape.graphics.lineStyle(Config.OUTLINE_SIZE, Config.OUTLINE_COLOR);
-        shape.graphics.drawRoundRect(Config.OUTLINE_SIZE / 2, Config.OUTLINE_SIZE / 2, size.x - Config.OUTLINE_SIZE, size.y - Config.OUTLINE_SIZE, Config.SIZE / 2);
+        shape.graphics.drawRoundRectComplex(Config.OUTLINE_SIZE / 2, Config.OUTLINE_SIZE / 2, size.x - Config.OUTLINE_SIZE, size.y - Config.OUTLINE_SIZE, roundSize(topLeft), roundSize(topRight), roundSize(bottomLeft), roundSize(bottomRight));
         shape.graphics.endFill();
         
         bitmap.draw(shape);
