@@ -25,12 +25,12 @@ class Utils
 
         final size = intAdjust(width, height);
 
-        final bitmap = new BitmapData(size.x, size.y, true, 0x0);
+        final bitmap:BitmapData = new BitmapData(size.x, size.y, true, 0x0);
 
-        final matrix = new Matrix();
+        final matrix:Matrix = new Matrix();
         matrix.createGradientBox(size.x, size.y, Math.PI / 2);
         
-        final shape = new Shape();
+        final shape:Shape = new Shape();
         shape.graphics.beginGradientFill(GradientType.LINEAR, [dark(0.5, color), dark(0.7, color)], [1, 1], [0, 255], matrix);
         shape.graphics.lineStyle(1.5, Config.OUTLINE_COLOR);
         shape.graphics.drawRoundRect(0.75, 0.75, size.x - 1.5, size.y - 1.5, Config.SIZE / 2);
@@ -47,9 +47,9 @@ class Utils
         lab ??= 'Label';
 
         final text:FlxText = new FlxText(0, 0, follow.width, lab, Math.min(follow.width, follow.height) * Config.FONT_SCALE);
-        text.alignment = 'center';
+        text.color = Config.FONT_COLOR;
         text.font = Config.FONT;
-        
+        text.alignment = 'center';
 
         return text;
     }

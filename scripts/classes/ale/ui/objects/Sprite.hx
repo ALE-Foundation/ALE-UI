@@ -1,7 +1,18 @@
 package ale.ui.objects;
 
+import flixel.graphics.FlxGraphic;
+
+import ale.ui.Config;
+
 class Sprite extends scripting.haxe.ScriptedFlxSprite implements ale.ui.interfaces.IObject
 {
+    public function new(?x:Float, ?y:Float, ?graphic:FlxGraphic)
+    {
+        super(null, null, graphic);
+
+        place(x, y);
+    }
+
 	public var brightness(never, set):Float;
     function set_brightness(value:Float):Float
 	{
@@ -37,4 +48,23 @@ class Sprite extends scripting.haxe.ScriptedFlxSprite implements ale.ui.interfac
     }
 
     public function uiDraw() {}
+
+    public function place(?uX:Float, ?uY:Float, ?right:Bool = false, ?down:Bool = false):Void
+    {
+        if (uX != null)
+        {
+            x = uX * Config.SIZE;
+
+            if (right)
+                x = FlxG.width - width - x;
+        }
+
+        if (uY != null)
+        {
+            y = uY * Config.SIZE;
+
+            if (down)
+                y = FlxG.height - height - y;
+        }
+    }
 }

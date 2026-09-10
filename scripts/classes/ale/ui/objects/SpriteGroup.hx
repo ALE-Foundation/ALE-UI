@@ -1,8 +1,17 @@
 package ale.ui.objects;
 
+import ale.ui.Config;
+
 class SpriteGroup extends scripting.haxe.ScriptedFlxSpriteGroup implements ale.ui.interfaces.IObject
 {
-	public var brightness(never, set):Float;
+    public function new(?x:Float, ?y:Float)
+    {
+        super();
+
+        place(x, y);
+    }
+    
+    public var brightness(never, set):Float;
     function set_brightness(value:Float):Float
 	{
 		for (spr in members)
@@ -38,4 +47,23 @@ class SpriteGroup extends scripting.haxe.ScriptedFlxSpriteGroup implements ale.u
     }
 
     public function uiDraw() {}
+
+    public function place(?uX:Float, ?uY:Float, ?right:Bool = false, ?down:Bool = false):Void
+    {
+        if (uX != null)
+        {
+            x = uX * Config.SIZE;
+
+            if (right)
+                x = FlxG.width - width - x;
+        }
+
+        if (uY != null)
+        {
+            y = uY * Config.SIZE;
+
+            if (down)
+                y = FlxG.height - height - y;
+        }
+    }
 }

@@ -9,4 +9,6 @@ interface IObject
     public var allowDraw:Bool;
 
     public function uiDraw():Void;
+
+    public function place(?uX:Float, ?uY:Float, ?right:Bool = false, ?down:Bool = false):Void;
 }

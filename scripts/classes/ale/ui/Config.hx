@@ -11,6 +11,7 @@ class Config
 
     public static var FONT:String = Defaults.FONT;
     public static var FONT_SCALE:Float = Defaults.FONT_SCALE;
+    public static var FONT_COLOR:FlxColor = Defaults.FONT_COLOR;
 
     public static function reset()
     {
@@ -21,5 +22,6 @@ class Config
 
         FONT = Defaults.FONT;
         FONT_SCALE = Defaults.FONT_SCALE;
+        FONT_COLOR = Defaults.FONT_COLOR;
     }
 }
