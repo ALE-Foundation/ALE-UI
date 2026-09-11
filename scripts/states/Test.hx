@@ -1,5 +1,7 @@
-import ale.ui.objects.Button;
+import ale.ui.objects.MultiTab;
 import ale.ui.objects.Tab;
+
+import ale.ui.objects.Button;
 
 
 // IGNORE TS
@@ -15,8 +17,9 @@ if (CoolVars.tactile)
 
 // :3
 
-final tab:Tab = new Tab(3, 3, 'Oso', 10, 10, 1);
-add(tab);
+
+final multitab:MultiTab = new MultiTab(1, 1, ['oso', 'donde', 'ta'], 'ta', 10, 10, 1);
+add(multitab);
 
 final button:Button = new Button(1, 1, 'ups', () -> debugTrace('oso'));
-tab.add(button);
+multitab.addObj('ta', button);

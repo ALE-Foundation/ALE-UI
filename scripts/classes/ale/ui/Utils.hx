@@ -78,6 +78,21 @@ class Utils
         return Math.round(x / mod) * mod;
 
 
+    public static function deleteDuplicates(obj:Array<Dynamic>):Array<Dynamic>
+    {
+        final seen:Map = new Map<Dynamic, Bool>();
+
+        return obj.filter(x -> {
+            if (seen.exists(x))
+                return false;
+
+            seen.set(x, true);
+
+            return true;
+        });
+    }
+
+
     public static function intAdjust(width:Float, height:Float):{x:Int, y:Int}
     {
         final data = adjust(width, height);

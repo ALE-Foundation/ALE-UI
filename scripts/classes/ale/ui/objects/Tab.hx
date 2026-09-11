@@ -35,10 +35,8 @@ class Tab extends SpriteGroup
 
     var _target:FlxPoint = FlxPoint.get();
 
-    public function new(?x:Float, ?y:Float = 1, ?text:String = 'Tab', ?width:Float = 8, ?height:Float = 6, ?borderHeight:Float = 1, ?color:FlxColor)
+    public function new(?x:Float, ?y:Float, ?text:String = 'Tab', ?width:Float = 8, ?height:Float = 6, ?borderHeight:Float = 1, ?color:FlxColor)
     {
-        super(x, y);
-
         border = Utils.roundMouseSprite(width, borderHeight, null, true, true, false, false, [Utils.dark(0.25, color), Utils.dark(0.5, color)]);
         border.place(null, -borderHeight);
         border.onPressChange = pressed -> {
@@ -57,6 +55,8 @@ class Tab extends SpriteGroup
                 snap();
             }
         };
+
+        super(x, y);
 
         title = Utils.label(text, border);
 
@@ -101,5 +101,12 @@ class Tab extends SpriteGroup
 
         if (y >= FlxG.height + Config.SIZE)
             y = FlxG.height;
+    }
+
+    override function place(?x:Float, ?y:Float)
+    {
+        super.place(x, y);
+
+        this.y += border.height;
     }
 }
