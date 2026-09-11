@@ -70,6 +70,10 @@ class Utils
     }
 
 
+	public static function lerp(a:Float, b:Float, ratio:Float):Float
+		return FlxMath.lerp(a, b, FlxMath.bound(ratio * FlxG.elapsed * 60, 0, 1));
+
+
     public static function snap(x:Float, mod:Float):Float
         return Math.round(x / mod) * mod;
 

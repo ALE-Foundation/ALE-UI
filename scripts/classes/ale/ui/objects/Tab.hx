@@ -33,6 +33,8 @@ class Tab extends SpriteGroup
 
     var _mouseOffset:FlxPoint = FlxPoint.get();
 
+    var _target:FlxPoint = FlxPoint.get();
+
     public function new(?x:Float, ?y:Float = 1, ?text:String = 'Tab', ?width:Float = 8, ?height:Float = 6, ?borderHeight:Float = 1, ?color:FlxColor)
     {
         super(x, y);
@@ -73,8 +75,11 @@ class Tab extends SpriteGroup
         {
             final pos = FlxG.mouse.getViewPosition(camera);
 
-            x = pos.x - _mouseOffset.x;
-            y = pos.y - _mouseOffset.y;
+            _target.x = Utils.snap(pos.x - _mouseOffset.x, Config.SIZE);
+            _target.y = Utils.snap(pos.y - _mouseOffset.y, Config.SIZE);
+
+            x = Utils.lerp(x, _target.x, 0.5);
+            y = Utils.lerp(y, _target.y, 0.5);
         }
 
         super.update(elapsed);
@@ -82,8 +87,8 @@ class Tab extends SpriteGroup
 
     function snap()
     {
-        x = Utils.snap(x, Config.SIZE);
-        y = Utils.snap(y, Config.SIZE);
+        x = _target.x;
+        y = _target.y;
 
         if (x <= -border.width)
             x = -border.width + Config.SIZE;
