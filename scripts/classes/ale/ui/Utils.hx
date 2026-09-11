@@ -70,6 +70,10 @@ class Utils
     }
 
 
+    public static function snap(x:Float, mod:Float):Float
+        return Math.round(x / mod) * mod;
+
+
     public static function intAdjust(width:Float, height:Float):{x:Int, y:Int}
     {
         final data = adjust(width, height);

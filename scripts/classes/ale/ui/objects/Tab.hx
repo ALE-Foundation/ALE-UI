@@ -82,6 +82,9 @@ class Tab extends SpriteGroup
 
     function snap()
     {
+        x = Utils.snap(x, Config.SIZE);
+        y = Utils.snap(y, Config.SIZE);
+
         if (x <= -border.width)
             x = -border.width + Config.SIZE;
 
