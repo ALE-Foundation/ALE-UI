@@ -2,7 +2,7 @@ package ale.ui;
 
 class Defaults
 {
-    public static final COLOR:FlxColor = FlxColor.fromRGB(80, 50, 255);
+    public static final COLOR:FlxColor = FlxColor.fromRGB(100, 80, 255);
 
     public static final OUTLINE_SIZE:Float = 1.5;
     public static final OUTLINE_COLOR:FlxColor = light(COLOR, 0.75);

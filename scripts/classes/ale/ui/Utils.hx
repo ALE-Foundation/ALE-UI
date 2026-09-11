@@ -10,16 +10,20 @@ import openfl.display.Shape;
 
 import openfl.geom.Matrix;
 
+import ale.ui.objects.MouseSprite;
 import ale.ui.objects.Sprite;
 
 import ale.ui.Config;
 
 class Utils
 {
-    public static function roundSprite(width:Float, height:Float, ?color:FlxColor, ?manualGradient:Array<FlxColor>, ?topLeft:Bool, ?topRight:Bool, ?bottomLeft:Bool, ?bottomRight:Bool):Sprite
-        return new Sprite(0, 0, roundGraphic(width, height, color, manualGradient));
+    public static function roundSprite(width:Float, height:Float, ?color:FlxColor, ?topLeft:Bool, ?topRight:Bool, ?bottomLeft:Bool, ?bottomRight:Bool, ?manualGradient:Array<FlxColor>):Sprite
+        return new Sprite(0, 0, roundGraphic(width, height, color, topLeft, topRight, bottomLeft, bottomRight, manualGradient));
 
-    public static function roundGraphic(width:Float, height:Float, ?color:FlxColor, ?manualGradient:Array<FlxColor>, ?topLeft:Bool = true, ?topRight:Bool = true, ?bottomLeft:Bool = true, ?bottomRight:Bool = true):FlxGraphic
+    public static function roundMouseSprite(width:Float, height:Float, ?color:FlxColor, ?topLeft:Bool, ?topRight:Bool, ?bottomLeft:Bool, ?bottomRight:Bool, ?manualGradient:Array<FlxColor>):Sprite
+        return new MouseSprite(0, 0, roundGraphic(width, height, color, topLeft, topRight, bottomLeft, bottomRight, manualGradient));
+
+    public static function roundGraphic(width:Float, height:Float, ?color:FlxColor, ?topLeft:Bool = true, ?topRight:Bool = true, ?bottomLeft:Bool = true, ?bottomRight:Bool = true, ?manualGradient:Array<FlxColor>):FlxGraphic
     {
         color ??= Config.COLOR;
 
@@ -53,6 +57,8 @@ class Utils
         text.color = Config.FONT_COLOR;
         text.font = Config.FONT;
         text.alignment = 'center';
+
+        center(text, follow);
 
         return text;
     }
@@ -88,9 +94,5 @@ class Utils
         return mix(FlxColor.BLACK, percent, a);
 
     public static function mix(b:FlxColor, percent:Float, ?a:FlxColor):FlxColor
-    {
-        a ??= Config.COLOR;
-
-        return FlxColor.interpolate(a, b, percent);
-    }
+        return FlxColor.interpolate(a ?? Config.COLOR, b, percent);
 }

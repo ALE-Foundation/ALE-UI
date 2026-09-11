@@ -1,4 +1,5 @@
 import ale.ui.objects.Button;
+import ale.ui.objects.Tab;
 
 
 // IGNORE TS
@@ -14,6 +15,8 @@ if (CoolVars.tactile)
 
 // :3
 
+final tab:Tab = new Tab(3, 3, 'Oso', 10, 10, 1);
+add(tab);
 
-final button:Button = new Button(2, 1, 'Oso', () -> debugTrace('donde'));
-add(button);
+final button:Button = new Button(1, 1, 'ups', () -> debugTrace('oso'));
+tab.add(button);
