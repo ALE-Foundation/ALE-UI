@@ -4,23 +4,19 @@ class Defaults
 {
     public static final COLOR:FlxColor = FlxColor.fromRGB(100, 80, 255);
 
-    public static final OUTLINE_SIZE:Float = 1.5;
-    public static final OUTLINE_COLOR:FlxColor = light(COLOR, 0.75);
-
     public static final SIZE:Float = 25;
+    public static final MARGIN:Float = 0.25;
+    
+    public static final OUTLINE_SIZE:Float = 1.5;
+    public static final OUTLINE_LIGHT:Float = 0.75;
 
     public static final FONT:String = Paths.font('montserrat.ttf');
     public static final FONT_SIZE:Float = 0.7;
     public static final FONT_COLOR:FlxColor = FlxColor.WHITE;
 
-    // ts should be on Utils
+    public static final CURSOR_SIZE:Float = 2;
 
-    static function light(col1, perc):FlxColor
-        return mix(col1, FlxColor.WHITE, perc);
+    public static final TAB:String = '    ';
 
-    static function gray(col1, perc):FlxColor
-        return mix(col1, FlxColor.GRAY, perc);
-
-    static function mix(col1, col2, perc):FlxColor
-        return FlxColor.interpolate(col1, col2, perc);
+    public static final INPUT_SIZE:Float = 0.6;
 }

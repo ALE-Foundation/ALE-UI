@@ -103,10 +103,10 @@ class Tab extends SpriteGroup
             y = FlxG.height;
     }
 
-    override function place(?x:Float, ?y:Float)
+    override function place(?uX:Float, ?uY:Float, ?right:Bool = false, ?down:Bool = false)
     {
-        super.place(x, y);
+        super.place(uX, uY, right, down);
 
-        this.y += border.height;
+        y += border.height;
     }
 }

@@ -1,8 +1,11 @@
-import ale.ui.objects.MultiTab;
-import ale.ui.objects.Tab;
-
+import ale.ui.objects.InputText;
 import ale.ui.objects.Button;
 
+// OLD ALE UI SHIT
+
+import ale.ui.UIUtils;
+
+UIUtils.usedInputs = 1;
 
 // IGNORE TS
 
@@ -17,9 +20,8 @@ if (CoolVars.tactile)
 
 // :3
 
+final input = new InputText(null, null, null, 'Mercado Libre');
+add(input);
 
-final multitab:MultiTab = new MultiTab(1, 1, ['oso', 'donde', 'ta'], 'ta', 10, 10, 1);
-add(multitab);
-
-final button:Button = new Button(1, 1, 'ups', () -> debugTrace('oso'));
-multitab.addObj('ta', button);
+final button = new Button(0, 2);
+add(button);
