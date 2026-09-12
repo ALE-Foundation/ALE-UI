@@ -11,6 +11,10 @@ import flixel.math.FlxMath;
 import openfl.events.KeyboardEvent;
 import openfl.ui.Mouse;
 
+import lime.system.Clipboard;
+
+using StringTools;
+
 class InputText extends SpriteGroup
 {
     var bg:Sprite;
@@ -20,11 +24,24 @@ class InputText extends SpriteGroup
 
     var cursor:Sprite;
 
-    public var writing(default, set):Bool;
-    function set_writing(val:Bool):Bool
+    public var disabled(default, set):Bool;
+    function set_disabled(val:Bool):Bool
     {
-        if (writing == val)
-            return writing;
+        if (disabled == val)
+            return disabled;
+
+        typing = false;
+
+        brightness = val ? -0.5 : 0;
+
+        return disabled = val;
+    }
+
+    public var typing(default, set):Bool;
+    function set_typing(val:Bool):Bool
+    {
+        if (typing == val)
+            return typing;
 
         FlxG.stage.window.textInputEnabled = val;
 
@@ -32,7 +49,7 @@ class InputText extends SpriteGroup
 
         timer = 0.5;
 
-        return writing = val;
+        return typing = val;
     }
 
     public var position(default, set):Int;
@@ -80,6 +97,7 @@ class InputText extends SpriteGroup
 
         cursor = new Sprite();
         cursor.makeGraphic(Config.CURSOR_SIZE, bg.height - Config.SIZE * Config.MARGIN);
+        cursor.alpha = 0.75;
 
         for (obj in [backText, text, cursor])
             obj.setPosition(Config.SIZE * Config.MARGIN, bg.height / 2 - obj.height / 2);
@@ -96,7 +114,7 @@ class InputText extends SpriteGroup
         value = def;
         position = value.length;
 
-        writing = false;
+        typing = false;
     }
 
     var timer:Float = 0.5;
@@ -105,11 +123,14 @@ class InputText extends SpriteGroup
     {
         super.update(elapsed);
 
+        if (disabled)
+            return;
+
         if (FlxG.mouse.justPressed)
         {
-            writing = bg.overlaped;
+            typing = bg.overlaped;
 
-            if (writing)
+            if (typing)
             {
                 if (value.length > 0)
                 {
@@ -139,42 +160,138 @@ class InputText extends SpriteGroup
             }
     }
 
+    /*
+    var isWord:Int -> Bool = code -> (code >= '0'.code && code <= '9'.code) || (code >= 'A'.code && code <= 'Z'.code) || (code >= 'a'.code && code <= 'z'.code);
+    var isSpace:Int -> Bool = code -> code == ' '.code || code == '\t'.code || code == '\n'.code || code == '\r'.code;
+    var isSymbol:Int -> Bool = code -> !isWord(code) && !isSpace(code);
+    */
+
+    // i blame rulescript
+    var isWord:Int -> Bool = code -> (code >= 48 && code <= 57) || (code >= 65 && code <= 90) || (code >= 97 && code <= 122);
+    var isSpace:Int -> Bool = code -> code == 32 || code == 9 || code == 10 || code == 13;
+    var isSymbol:Int -> Bool = code -> !isWord(code) && !isSpace(code);
+
+    var regexes:Void -> Array<Int -> Bool> = () -> [isWord, isSpace, isSymbol];
+
     function onKeyDown(e:KeyboardEvent)
     {
-        if (!writing)
+        if (!typing)
             return;
 
-        if (e.ctrlKey)
+        switch (e.keyCode)
         {
-            switch (e.keyCode)
-            {
-                
-            }
-        } else {
-            switch (e.keyCode)
-            {
-                case FlxKey.BACKSPACE:
-                    if (value.length > 0)
+            case FlxKey.ENTER, FlxKey.ESCAPE:
+                typing = false;
+
+            case FlxKey.HOME:
+                position = 0;
+
+            case FlxKey.END:
+                position = value.length;
+
+
+            case FlxKey.BACKSPACE:
+                if (value.length > 0 && position > 0)
+                {
+                    if (e.ctrlKey && position > 1)
                     {
+                        final end:Int = scan(true);
+
+                        value = value.substring(0, end) + value.substring(position);
+
+                        position = end;
+                    } else {
                         value = value.substring(0, position - 1) + value.substring(position);
 
                         position--;
                     }
+                }
 
-                case FlxKey.DELETE:
-                    if (value.length > 0)
-                        value = value.substring(0, position) + value.substring(position + 1);
+            case FlxKey.DELETE:
+                if (value.length > 0 && position < value.length)
+                    value = value.substring(0, position) + value.substring(e.ctrlKey && position < value.length ? scan(false) : (position + 1));
 
-                case FlxKey.TAB:
-                    insertText(Config.TAB);
+            case FlxKey.TAB:
+                insertText(Config.TAB);
 
-                case FlxKey.LEFT:
+            case FlxKey.LEFT:
+                if (e.ctrlKey)
+                    position = scan(true);
+                else
                     position--;
 
-                case FlxKey.RIGHT:
+            case FlxKey.RIGHT:
+                if (e.ctrlKey)
+                    position = scan(false);
+                else
                     position++;
+
+            case FlxKey.C:
+                if (e.ctrlKey)
+                    Clipboard.text = value;
+
+            case FlxKey.V:
+                if (e.ctrlKey)
+                    insertText(Clipboard.text.replace(~/(?:\s)/g, ' '));
+
+            default:
+        }
+    }
+
+    function getRegex(code:Int)
+    {
+        for (reg in regexes())
+            if (reg(code))
+                return reg;
+
+        return null;
+    }
+
+    function scan(left:Bool):Int
+    {
+        var end = position;
+        var index = left ? position - 1 : position;
+
+        if (index < 0 || index >= value.length)
+            return position;
+
+        var code = value.fastCodeAt(index);
+
+        var reg = getRegex(code);
+
+        end += left ? -1 : 1;
+
+        if (isSpace(code))
+        {
+            index += left ? -1 : 1;
+
+            if (index < 0 || index >= value.length)
+                return end;
+
+            code = value.fastCodeAt(index);
+
+            if (!isSpace(code))
+            {
+                reg = getRegex(code);
+
+                end += left ? -1 : 1;
             }
         }
+
+        if (reg == null)
+            return end;
+
+        while (true)
+        {
+            index = left ? end - 1 : end;
+
+            if (index < 0 || index >= value.length || !reg(value.fastCodeAt(index)))
+                break;
+
+            end += left ? -1 : 1;
+        }
+
+        return end;
     }
 
 	function onTextInput(toAdd:String)
@@ -182,6 +299,9 @@ class InputText extends SpriteGroup
 
     function insertText(toAdd:String)
     {
+        if (!typing)
+            return;
+
         value = value.substring(0, position) + toAdd + value.substring(position);
 
         position += toAdd.length;
@@ -195,6 +315,6 @@ class InputText extends SpriteGroup
 		
 		FlxG.stage.window.onTextInput.remove(onTextInput);
 
-        writing = false;
+        typing = false;
     }
 }

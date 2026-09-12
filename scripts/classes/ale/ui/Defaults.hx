@@ -14,7 +14,7 @@ class Defaults
     public static final FONT_SIZE:Float = 0.7;
     public static final FONT_COLOR:FlxColor = FlxColor.WHITE;
 
-    public static final CURSOR_SIZE:Float = 2;
+    public static final CURSOR_SIZE:Float = 1;
 
     public static final TAB:String = '    ';
 
