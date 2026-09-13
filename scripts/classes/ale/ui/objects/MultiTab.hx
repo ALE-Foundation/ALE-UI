@@ -1,11 +1,10 @@
 package ale.ui.objects;
 
 import ale.ui.objects.SpriteGroup;
-import ale.ui.objects.Tab;
 
 import ale.ui.Utils;
 
-class MultiTab extends Tab
+class MultiTab extends ale.ui.objects.Tab
 {
     var buttons:Map<String, SpriteGroup> = new Map<String, SpriteGroup>();
 

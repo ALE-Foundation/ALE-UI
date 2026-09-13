@@ -1,8 +1,6 @@
 package ale.ui.objects;
 
-import ale.ui.objects.SpriteGroup;
-
-class MouseSpriteGroup extends SpriteGroup implements ale.ui.interfaces.IMouse
+class MouseSpriteGroup extends ale.ui.objects.SpriteGroup implements ale.ui.interfaces.IMouse
 {
 	public var overlaped:Bool = false;
 

@@ -5,21 +5,25 @@ import ale.ui.Config;
 class SpriteGroup extends scripting.haxe.ScriptedFlxSpriteGroup implements ale.ui.interfaces.IObject
 {
     var _target:Dynamic;
-    var _targetProperty:Dynamic;
+    var _targetProperties:Array<String>;
     var _targetUpdate:Dynamic -> Void;
 
 
     public function updateTarget(value:Dynamic):Dynamic
-        if (_target != null && _targetProperty != null && _targetUpdate != null)
+        if (_target != null && _targetProperties != null && _targetUpdate != null)
             _targetUpdate(value);
 
-    public function setTarget(obj:Dynamic, prop:String, ?func:Dynamic -> Void)
+    public function setTarget(obj:Dynamic, props:OneOfTwo<String, Array<String>>, ?func:Dynamic -> Void)
     {
         _target = obj;
-        _targetProperty = prop;
-        _targetUpdate = func ?? val -> Reflect.setProperty(_target, _targetProperty, val);
-    }
+        _targetProperties = cast props is Array ? props : [props];
+        _targetUpdate = func ?? val -> for (prop in _targetProperties) Reflect.setProperty(_target, prop, val);
 
+        // I'LL MAKE A FUCKIN' ValueSpriteGroup.hx I PROMISE :sob:
+
+        if (value != null)
+            updateTarget(value);
+    }
 
     public function new(?x:Float, ?y:Float)
     {

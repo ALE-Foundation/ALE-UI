@@ -1,10 +1,8 @@
 package ale.ui.objects;
 
-import ale.ui.objects.MouseSpriteGroup;
-
 import ale.ui.Utils;
 
-class Button extends MouseSpriteGroup
+class Button extends ale.ui.objects.MouseSpriteGroup
 {
     var bg:FlxSprite;
     var label:FlxText;

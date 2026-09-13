@@ -1,12 +1,11 @@
 package ale.ui.objects;
 
-import ale.ui.objects.SpriteGroup;
 import ale.ui.Config;
 import ale.ui.Utils;
 
 import flixel.math.FlxPoint;
 
-class Tab extends SpriteGroup
+class Tab extends ale.ui.objects.SpriteGroup
 {
     var border:MouseSprite;
     var title:FlxText;

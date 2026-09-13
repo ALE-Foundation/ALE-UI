@@ -117,8 +117,8 @@ class Utils
 
     public static function adjust(width:Float, height:Float):{x:Float, y:Float}
         return {
-            x: Math.max(1, width) * Config.SIZE,
-            y: Math.max(1, height) * Config.SIZE
+            x: width * Config.SIZE,
+            y: height * Config.SIZE
         };
 
 

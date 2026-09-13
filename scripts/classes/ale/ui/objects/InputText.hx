@@ -1,6 +1,5 @@
 package ale.ui.objects;
 
-import ale.ui.objects.SpriteGroup;
 import ale.ui.objects.Sprite;
 import ale.ui.Config;
 import ale.ui.Utils;
@@ -16,7 +15,7 @@ import lime.system.Clipboard;
 
 using StringTools;
 
-class InputText extends SpriteGroup
+class InputText extends ale.ui.objects.SpriteGroup
 {
     public var value(default, set):String;
     function set_value(val:String):String

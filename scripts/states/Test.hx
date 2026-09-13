@@ -1,5 +1,4 @@
-import ale.ui.objects.InputText;
-import ale.ui.objects.Button;
+import ale.ui.objects.Slider;
 
 // OLD ALE UI SHIT
 
@@ -15,14 +14,17 @@ if (CoolVars.tactile)
 
     MobileAPI.setOrientation('portrait');
 } else {
-    CoolUtil.resizeGame(850, 500, false);
+    // CoolUtil.resizeGame(850, 500, false);
 }
 
 // :3
 
-final tex = new FlxText(0, 0, 0, 'oso', 50);
-add(tex);
+final char = new funkin.visuals.game.Character('gf');
+char.x += 500;
+char.y += 100;
+add(char);
 
-final input = new InputText(3, 3);
-input.setTarget(tex, 'text');
-add(input);
+final slider = new Slider(1, 1, 0, 5, 1, true, 8, 1, 2, 2, FlxColor.RED);
+add(slider);
+
+slider.setTarget(char.scale, ['x', 'y']);
