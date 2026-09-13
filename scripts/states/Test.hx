@@ -19,3 +19,10 @@ if (CoolVars.tactile)
 }
 
 // :3
+
+final tex = new FlxText(0, 0, 0, 'oso', 50);
+add(tex);
+
+final input = new InputText(3, 3);
+input.setTarget(tex, 'text');
+add(input);

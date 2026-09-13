@@ -139,6 +139,8 @@ class InputText extends SpriteGroup
 
         updateHint();
 
+        updateTarget(value);
+
         return value;
     }
 

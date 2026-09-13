@@ -4,6 +4,23 @@ import ale.ui.Config;
 
 class SpriteGroup extends scripting.haxe.ScriptedFlxSpriteGroup implements ale.ui.interfaces.IObject
 {
+    var _target:Dynamic;
+    var _targetProperty:Dynamic;
+    var _targetUpdate:Dynamic -> Void;
+
+
+    public function updateTarget(value:Dynamic):Dynamic
+        if (_target != null && _targetProperty != null && _targetUpdate != null)
+            _targetUpdate(value);
+
+    public function setTarget(obj:Dynamic, prop:String, ?func:Dynamic -> Void)
+    {
+        _target = obj;
+        _targetProperty = prop;
+        _targetUpdate = func ?? val -> Reflect.setProperty(_target, _targetProperty, val);
+    }
+
+
     public function new(?x:Float, ?y:Float)
     {
         super();
