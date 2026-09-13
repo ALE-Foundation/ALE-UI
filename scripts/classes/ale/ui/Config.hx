@@ -7,7 +7,12 @@ class Config
     public static var COLOR:FlxColor = Defaults.COLOR;
 
     public static var SIZE:Float = Defaults.SIZE;
-    public static var MARGIN:Float = Defaults.MARGIN;
+
+    public static var MARGIN_SIZE:Float = Defaults.MARGIN_SIZE;
+
+    public static var MARGIN(get, never):Float;
+    static function get_MARGIN():Float
+        return SIZE * MARGIN_SIZE;
 
     public static var OUTLINE_SIZE:Float = Defaults.OUTLINE_SIZE;
     public static var OUTLINE_LIGHT:Float = 0.5;

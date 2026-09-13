@@ -18,6 +18,25 @@ using StringTools;
 
 class InputText extends SpriteGroup
 {
+    public var value(default, set):String;
+    function set_value(val:String):String
+    {
+        if (value == val)
+            return value;
+
+        val ??= '';
+
+        text.text = val;
+
+        value = val;
+
+        updateHint();
+
+        updateTarget(value);
+
+        return value;
+    }
+
     var bg:Sprite;
 
     var hintText:FlxText;
@@ -92,8 +111,8 @@ class InputText extends SpriteGroup
         cursor.visible = cursor.alive;
         timer = 0.5;
 
-        final left:Float = bg.x + Config.SIZE * Config.MARGIN;
-        final right:Float = bg.x + bg.width - Config.SIZE * Config.MARGIN;
+        final left:Float = bg.x + Config.MARGIN;
+        final right:Float = bg.x + bg.width - Config.MARGIN;
 
         final pos:Float = text.x + (value.length <= 0 ? 0 : val >= value.length ? text.width : text.textField.getCharBoundaries(val).x);
 
@@ -125,25 +144,6 @@ class InputText extends SpriteGroup
         return position = val;
     }
 
-    public var value(default, set):String;
-    function set_value(val:String):String
-    {
-        if (value == val)
-            return value;
-
-        val ??= '';
-
-        text.text = val;
-
-        value = val;
-
-        updateHint();
-
-        updateTarget(value);
-
-        return value;
-    }
-
     public function new(?x:Float, ?y:Float, ?back:String, ?def:String, ?hints:Array<String>, ?width:Float = 4, ?height:Float = 1, ?color:FlxColor)
     {
         super(x, y);
@@ -164,15 +164,15 @@ class InputText extends SpriteGroup
 
         text = Utils.text('', 0, bg.height * Config.INPUT_SIZE);
 
-        hintText.clipRect = FlxRect.get(0, 0, bg.width - Config.SIZE * Config.MARGIN * 2, hintText.frameHeight);
-        text.clipRect = FlxRect.get(0, 0, bg.width - Config.SIZE * Config.MARGIN * 2, text.frameHeight);
+        hintText.clipRect = FlxRect.get(0, 0, bg.width - Config.MARGIN * 2, hintText.frameHeight);
+        text.clipRect = FlxRect.get(0, 0, bg.width - Config.MARGIN * 2, text.frameHeight);
 
         cursor = new Sprite();
-        cursor.makeGraphic(Config.CURSOR_SIZE, bg.height - Config.SIZE * Config.MARGIN);
+        cursor.makeGraphic(Config.CURSOR_SIZE, bg.height - Config.MARGIN);
         cursor.alpha = 0.75;
 
         for (obj in [hintText, text, cursor])
-            obj.setPosition(Config.SIZE * Config.MARGIN, bg.height / 2 - obj.height / 2);
+            obj.setPosition(Config.MARGIN, bg.height / 2 - obj.height / 2);
 
         add(bg);
         add(hintText);

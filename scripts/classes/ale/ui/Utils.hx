@@ -40,7 +40,7 @@ class Utils
         matrix.createGradientBox(size.x, size.y, Math.PI / 2);
         
         function roundSize(cond:Bool):Float
-            return cond ? Config.SIZE * Config.MARGIN : 0;
+            return cond ? Config.MARGIN : 0;
 
         final shape:Shape = new Shape();
         shape.graphics.beginGradientFill(GradientType.LINEAR, manualGradient ?? [dark(0.5, color), dark(0.7, color)], [1, 1], [0, 255], matrix);

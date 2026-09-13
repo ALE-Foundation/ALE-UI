@@ -5,7 +5,8 @@ class Defaults
     public static final COLOR:FlxColor = FlxColor.fromRGB(100, 80, 255);
 
     public static final SIZE:Float = 25;
-    public static final MARGIN:Float = 0.25;
+    
+    public static final MARGIN_SIZE:Float = 0.25;
     
     public static final OUTLINE_SIZE:Float = 1.5;
     public static final OUTLINE_LIGHT:Float = 0.75;
