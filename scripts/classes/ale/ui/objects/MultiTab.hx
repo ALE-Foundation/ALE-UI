@@ -40,9 +40,15 @@ class MultiTab extends Tab
         return disabled = value;
     }
     
-    public function new(?x:Float, ?y:Float, ?groups:Array<String> = ['A', 'B', 'C'], ?def:String, ?width:Float = 8, ?height:Float = 6, ?borderHeight:Float = 1, ?color:FlxColor)
+    public function new(?x:Float, ?y:Float, ?groups:Array<String>, ?def:String, ?width:Float = 8, ?height:Float = 6, ?borderHeight:Float = 1, ?color:FlxColor)
     {
         super(x, y, '', width, height, borderHeight, color);
+
+        groups ??= ['A', 'B', 'C'];
+
+        width ??= 8;
+        height ??= 6;
+        borderHeight ??= 1;
 
         groups = Utils.deleteDuplicates(groups);
 

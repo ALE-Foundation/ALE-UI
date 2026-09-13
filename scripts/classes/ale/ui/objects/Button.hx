@@ -26,6 +26,11 @@ class Button extends MouseSpriteGroup
     {
         super(x, y);
 
+		text ??= 'Button';
+		
+		width ??= 4;
+		height ??= 1;
+
         bg = Utils.roundSprite(width, height, color);
 
         label = Utils.label(text, bg);

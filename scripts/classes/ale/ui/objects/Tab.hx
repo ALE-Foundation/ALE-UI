@@ -37,6 +37,12 @@ class Tab extends SpriteGroup
 
     public function new(?x:Float, ?y:Float, ?text:String = 'Tab', ?width:Float = 8, ?height:Float = 6, ?borderHeight:Float = 1, ?color:FlxColor)
     {
+        text ??= 'Tab';
+
+        width ??= 8;
+        height ??= 6;
+        borderHeight ??= 1;
+
         border = Utils.roundMouseSprite(width, borderHeight, null, true, true, false, false, [Utils.dark(0.25, color), Utils.dark(0.5, color)]);
         border.place(null, -borderHeight);
         border.onPressChange = pressed -> {

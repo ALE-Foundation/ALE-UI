@@ -19,9 +19,3 @@ if (CoolVars.tactile)
 }
 
 // :3
-
-final input = new InputText(null, null, null, 'Masha');
-add(input);
-
-final button = new Button(0, 2);
-add(button);

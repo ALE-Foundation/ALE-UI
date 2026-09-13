@@ -6,6 +6,7 @@ import ale.ui.Config;
 import ale.ui.Utils;
 
 import flixel.input.keyboard.FlxKey;
+import flixel.math.FlxRect;
 import flixel.math.FlxMath;
 
 import openfl.events.KeyboardEvent;
@@ -19,10 +20,38 @@ class InputText extends SpriteGroup
 {
     var bg:Sprite;
 
-    var backText:FlxText;
+    var hintText:FlxText;
     var text:FlxText;
 
     var cursor:Sprite;
+
+    public var hint(default, set):String;
+    function set_hint(val:String):String
+    {
+        if (hint == val)
+            return hint;
+
+        hint = val;
+
+        updateHint();
+
+        return val;
+    }
+
+    public var hints(default, set):Array<String>;
+    function set_hints(val:Array<String>):Array<String>
+    {
+        if (hints == val)
+            return hints;
+
+        hints = val;
+
+        updateHint();
+
+        return hints;
+    }
+
+    public var currentHint:Null<String>;
 
     public var disabled(default, set):Bool;
     function set_disabled(val:Bool):Bool
@@ -60,10 +89,38 @@ class InputText extends SpriteGroup
 
         val = FlxMath.bound(val, 0, value.length);
 
-        cursor.x = (text.x + (value.length <= 0 ? 0 : val >= value.length ? text.width : text.textField.getCharBoundaries(val).x)) - cursor.width / 2;
-
         cursor.visible = cursor.alive;
         timer = 0.5;
+
+        final left:Float = bg.x + Config.SIZE * Config.MARGIN;
+        final right:Float = bg.x + bg.width - Config.SIZE * Config.MARGIN;
+
+        final pos:Float = text.x + (value.length <= 0 ? 0 : val >= value.length ? text.width : text.textField.getCharBoundaries(val).x);
+
+        cursor.x = pos - cursor.width / 2;
+
+        var diff:Float = 0;
+
+        if (pos < left)
+            diff = left - pos;
+        else if (pos > right)
+            diff = right - pos;
+
+        if (text.width > right - left)
+        {
+            final newX:Float = text.x + diff;
+
+            final maxX:Float = right - text.width;
+
+            if (newX < maxX)
+                diff += maxX - newX;
+        }
+
+        cursor.x += diff;
+        text.x += diff;
+        hintText.x = text.x;
+
+        hintText.clipRect.x = text.clipRect.x = left - text.x;
 
         return position = val;
     }
@@ -76,49 +133,65 @@ class InputText extends SpriteGroup
 
         val ??= '';
 
-        backText.visible = val.length <= 0;
-
         text.text = val;
 
-        return value = val;
+        value = val;
+
+        updateHint();
+
+        return value;
     }
 
-    public function new(?x:Float, ?y:Float, ?back:String = 'Enter text...', ?def:String = '', ?width:Float = 4, ?height:Float = 1, ?color:FlxColor)
+    public function new(?x:Float, ?y:Float, ?back:String, ?def:String, ?hints:Array<String>, ?width:Float = 4, ?height:Float = 1, ?color:FlxColor)
     {
         super(x, y);
+
+        back ??= 'Enter text...';
+        def ??= '';
+        
+        width ??= 4;
+        height ??= 1;
+
+        hints ??= [];
 
         bg = Utils.roundMouseSprite(width, height, color ?? Utils.gray(0.5));
         bg.onOverlapChange = over -> Mouse.cursor = over ? 'ibeam' : 'arrow';
 
-        backText = Utils.text(back, 0, bg.height * Config.INPUT_SIZE);
-        backText.alpha = 0.5;
+        hintText = Utils.text(back, 0, bg.height * Config.INPUT_SIZE);
+        hintText.alpha = 0.5;
 
-        text = Utils.text('oso', 0, bg.height * Config.INPUT_SIZE);
+        text = Utils.text('', 0, bg.height * Config.INPUT_SIZE);
+
+        hintText.clipRect = FlxRect.get(0, 0, bg.width - Config.SIZE * Config.MARGIN * 2, hintText.frameHeight);
+        text.clipRect = FlxRect.get(0, 0, bg.width - Config.SIZE * Config.MARGIN * 2, text.frameHeight);
 
         cursor = new Sprite();
         cursor.makeGraphic(Config.CURSOR_SIZE, bg.height - Config.SIZE * Config.MARGIN);
         cursor.alpha = 0.75;
 
-        for (obj in [backText, text, cursor])
+        for (obj in [hintText, text, cursor])
             obj.setPosition(Config.SIZE * Config.MARGIN, bg.height / 2 - obj.height / 2);
 
         add(bg);
-        add(backText);
+        add(hintText);
         add(text);
         add(cursor);
 
         FlxG.stage.addEventListener('keyDown', onKeyDown, false, 1);
 
 		FlxG.stage.window.onTextInput.add(onTextInput);
+        typing = false;
+
+        hint = back;
+
+        this.hints = hints;
 
         value = def;
         position = value.length;
-
-        typing = false;
     }
 
     var timer:Float = 0.5;
-    
+
     override function update(elapsed:Float)
     {
         super.update(elapsed);
@@ -166,7 +239,6 @@ class InputText extends SpriteGroup
     var isSymbol:Int -> Bool = code -> !isWord(code) && !isSpace(code);
     */
 
-    // i blame rulescript
     var isWord:Int -> Bool = code -> (code >= 48 && code <= 57) || (code >= 65 && code <= 90) || (code >= 97 && code <= 122);
     var isSpace:Int -> Bool = code -> code == 32 || code == 9 || code == 10 || code == 13;
     var isSymbol:Int -> Bool = code -> !isWord(code) && !isSpace(code);
@@ -189,6 +261,15 @@ class InputText extends SpriteGroup
             case FlxKey.END:
                 position = value.length;
 
+            case FlxKey.TAB:
+                if (currentHint == null)
+                {
+                    insertText(Config.TAB);
+                } else {
+                    value = currentHint;
+
+                    position = value.length;
+                }
 
             case FlxKey.BACKSPACE:
                 if (value.length > 0 && position > 0)
@@ -236,6 +317,28 @@ class InputText extends SpriteGroup
 
             default:
         }
+    }
+
+    function updateHint()
+    {
+        currentHint = null;
+
+        if (value == null || value.length <= 0)
+        {
+            hintText.text = hint ?? '';
+
+            return;
+        }
+
+        for (hint in hints)
+            if (hint.startsWith(value))
+            {
+                hintText.text = currentHint = hint;
+
+                return;
+            }
+
+        hintText.text = '';
     }
 
     function getRegex(code:Int)
