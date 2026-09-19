@@ -19,5 +19,5 @@ if (CoolVars.tactile)
 
 // :3
 
-final obj = new NumericStepper();
+final obj = new NumericStepper(2, 1, -20, 20, 5, 1.5);
 add(obj);

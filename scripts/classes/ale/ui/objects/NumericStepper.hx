@@ -19,9 +19,11 @@ class NumericStepper extends ale.ui.core.SpriteGroup
         if (change == val)
             return change;
 
+        change = val;
+
         _decimals = FlxMath.getDecimals(change);
 
-        return change;
+        return val;
     }
 
     public var min(default, set):Float;
@@ -30,10 +32,12 @@ class NumericStepper extends ale.ui.core.SpriteGroup
         if (min == val)
             return min;
 
+        min = val;
+
         if (value != null)
             value = value;
 
-        return min = val;
+        return min;
     }
 
     public var max(default, set):Float;
@@ -42,10 +46,12 @@ class NumericStepper extends ale.ui.core.SpriteGroup
         if (max == val)
             return max;
 
+        max = val;
+
         if (value != null)
             value = value;
         
-        return max = val;
+        return max;
     }
 
     public var value(default, set):Float;
