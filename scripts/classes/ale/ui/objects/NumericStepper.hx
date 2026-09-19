@@ -53,6 +53,8 @@ class NumericStepper extends ale.ui.objects.SpriteGroup
 
         val = FlxMath.roundDecimal(val, _decimals);
 
+        inputText.value = Std.string(val);
+
         if (value == val)
             return value;
 
@@ -60,8 +62,6 @@ class NumericStepper extends ale.ui.objects.SpriteGroup
 
         minusButton.disabled = value <= min;
         plusButton.disabled = value >= max;
-
-        inputText.value = Std.string(value);
 
         updateTarget(value);
 
@@ -84,6 +84,8 @@ class NumericStepper extends ale.ui.objects.SpriteGroup
         buttonWidth ??= 1;
 
         inputText = new InputText(null, null, hint, null, null, width, height, color);
+        inputText.onSubmit = val -> value = Std.parseFloat(val);
+        inputText.regex = ~/[^0-9.-]/g;
 
         minusButton = new Button(width, null, '-', () -> value -= change, buttonWidth, height, color);
         plusButton = new Button(width + buttonWidth, null, '+', () -> value += change, buttonWidth, height, color);

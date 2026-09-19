@@ -17,9 +17,27 @@ using StringTools;
 
 class InputText extends ale.ui.objects.SpriteGroup
 {
+    public var onSubmit:String -> Void;
+
+    public var regex(default, set):EReg;
+    function set_regex(val:EReg):EReg
+    {
+        if (regex == val)
+            return regex;
+
+        regex = val;
+
+        value = value;
+
+        return regex;
+    }
+
     public var value(default, set):String;
     function set_value(val:String):String
     {
+        if (regex != null)
+            val = regex.replace(val, '');
+
         if (value == val)
             return value;
 
@@ -202,6 +220,8 @@ class InputText extends ale.ui.objects.SpriteGroup
 
         if (FlxG.mouse.justPressed)
         {
+            final oldTyping:Bool = typing;
+
             typing = bg.overlaped;
 
             if (typing)
@@ -220,7 +240,8 @@ class InputText extends ale.ui.objects.SpriteGroup
                 } else {
                     position = 0;
                 }
-            }
+            } else if (oldTyping)
+                submit();
         }
 
         if (cursor.alive)
@@ -234,17 +255,21 @@ class InputText extends ale.ui.objects.SpriteGroup
             }
     }
 
+    function submit()
+        if (onSubmit != null)
+            onSubmit(value);
+
     /*
     var isWord:Int -> Bool = code -> (code >= '0'.code && code <= '9'.code) || (code >= 'A'.code && code <= 'Z'.code) || (code >= 'a'.code && code <= 'z'.code);
     var isSpace:Int -> Bool = code -> code == ' '.code || code == '\t'.code || code == '\n'.code || code == '\r'.code;
     var isSymbol:Int -> Bool = code -> !isWord(code) && !isSpace(code);
     */
 
-    var isWord:Int -> Bool = code -> (code >= 48 && code <= 57) || (code >= 65 && code <= 90) || (code >= 97 && code <= 122);
-    var isSpace:Int -> Bool = code -> code == 32 || code == 9 || code == 10 || code == 13;
-    var isSymbol:Int -> Bool = code -> !isWord(code) && !isSpace(code);
+    final isWord:Int -> Bool = code -> (code >= 48 && code <= 57) || (code >= 65 && code <= 90) || (code >= 97 && code <= 122);
+    final isSpace:Int -> Bool = code -> code == 32 || code == 9 || code == 10 || code == 13;
+    final isSymbol:Int -> Bool = code -> !isWord(code) && !isSpace(code);
 
-    var regexes:Void -> Array<Int -> Bool> = () -> [isWord, isSpace, isSymbol];
+    final regexes:Void -> Array<Int -> Bool> = () -> [isWord, isSpace, isSymbol];
 
     function onKeyDown(e:KeyboardEvent)
     {
@@ -255,6 +280,8 @@ class InputText extends ale.ui.objects.SpriteGroup
         {
             case FlxKey.ENTER, FlxKey.ESCAPE:
                 typing = false;
+
+                submit();
 
             case FlxKey.HOME:
                 position = 0;
