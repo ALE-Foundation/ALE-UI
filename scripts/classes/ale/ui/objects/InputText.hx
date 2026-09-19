@@ -143,7 +143,7 @@ class InputText extends ale.ui.objects.SpriteGroup
         return position = val;
     }
 
-    public function new(?x:Float, ?y:Float, ?back:String, ?def:String, ?hints:Array<String>, ?width:Float = 4, ?height:Float = 1, ?color:FlxColor)
+    public function new(?x:Float, ?y:Float, ?back:String = 'Enter text...', ?def:String = '', ?hints:Array<String>, ?width:Float = 4, ?height:Float = 1, ?color:FlxColor)
     {
         super(x, y);
 
@@ -155,7 +155,7 @@ class InputText extends ale.ui.objects.SpriteGroup
 
         hints ??= [];
 
-        bg = Utils.roundMouseSprite(width, height, color ?? Utils.gray(0.5));
+        bg = Utils.roundMouseSprite(width, height, Utils.gray(0.5, color));
         bg.onOverlapChange = over -> Mouse.cursor = over ? 'ibeam' : 'arrow';
 
         hintText = Utils.text(back, 0, bg.height * Config.INPUT_SIZE);

@@ -1,4 +1,4 @@
-import ale.ui.objects.Slider;
+import ale.ui.objects.NumericStepper;
 
 // OLD ALE UI SHIT
 
@@ -14,17 +14,10 @@ if (CoolVars.tactile)
 
     MobileAPI.setOrientation('portrait');
 } else {
-    // CoolUtil.resizeGame(850, 500, false);
+    CoolUtil.resizeGame(850, 500, false);
 }
 
 // :3
 
-final char = new funkin.visuals.game.Character('gf');
-char.x += 500;
-char.y += 100;
-add(char);
-
-final slider = new Slider(1, 1, 0, 5, 1, true, 8, 1, 2, 2, FlxColor.RED);
-add(slider);
-
-slider.setTarget(char.scale, ['x', 'y']);
+final stepper:NumericStepper = new NumericStepper(1, 1, 0, 100, 2, 1, 'oso', 3, 1, 1, FlxColor.RED);
+add(stepper);
