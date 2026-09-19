@@ -5,7 +5,7 @@ import ale.ui.Utils;
 
 import flixel.math.FlxPoint;
 
-class Tab extends ale.ui.objects.SpriteGroup
+class Tab extends ale.ui.core.SpriteGroup
 {
     var border:MouseSprite;
     var title:FlxText;
@@ -42,7 +42,12 @@ class Tab extends ale.ui.objects.SpriteGroup
         height ??= 6;
         borderHeight ??= 1;
 
-        border = Utils.roundMouseSprite(width, borderHeight, null, true, true, false, false, [Utils.dark(0.25, color), Utils.dark(0.5, color)]);
+        border = Utils.roundMouseSprite(width, borderHeight, {
+            color: color,
+            bottomLeft: 0,
+            bottomRight: 0
+        });
+
         border.place(null, -borderHeight);
         border.onPressChange = pressed -> {
             if (!movable)
@@ -65,7 +70,11 @@ class Tab extends ale.ui.objects.SpriteGroup
 
         title = Utils.label(text, border);
 
-        bg = Utils.roundSprite(width, height, null, false, false, true, true, [Utils.dark(0.75, color), Utils.dark(0.9, color)]);
+        bg = Utils.roundSprite(width, height, {
+            color: Utils.dark(0.75, color),
+            topLeft: 0,
+            topRight: 0
+        });
 
         add(border);
         add(title);

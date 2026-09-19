@@ -2,7 +2,7 @@ package ale.ui.objects;
 
 import ale.ui.Utils;
 
-class Slider extends ale.ui.objects.SpriteGroup
+class Slider extends ale.ui.core.SpriteGroup
 {
     public var min(default, set):Float;
     function set_min(val:Float):Float
@@ -71,7 +71,7 @@ class Slider extends ale.ui.objects.SpriteGroup
     var button:MouseSprite;
     var label:FlxText;
 
-    public function new(?x:Float, ?y:Float, ?min:Float = -1, ?max:Float = 1, ?def:Float = 0, ?decimal:Bool = true, ?width:Float = 4, ?height:Float = 0.5, ?buttonWidth:Float = 1, ?buttonHeight:Float = 1, ?color:FlxColor)
+    public function new(?x:Float, ?y:Float, ?min:Float = -1, ?max:Float = 1, ?def:Float = 0, ?decimal:Bool = true, ?width:Float = 4, ?height:Float = 0.5, ?buttonWidth:Float = 1, ?buttonHeight:Float = 1, ?style:RoundStyle)
     {
         min ??= -1;
         max ??= 1;
@@ -87,7 +87,7 @@ class Slider extends ale.ui.objects.SpriteGroup
 
         super(x, y);
 
-        button = Utils.roundMouseSprite(buttonWidth, buttonHeight, color);
+        button = Utils.roundMouseSprite(buttonWidth, buttonHeight, style);
         button.onPressChange = pressed -> {
             button.brightness = pressed ? -0.25 : 0;
 
@@ -95,7 +95,7 @@ class Slider extends ale.ui.objects.SpriteGroup
                 _offset = FlxG.mouse.getViewPosition(camera).x - button.x;
         };
 
-        bg = Utils.roundSprite(width, height, color);
+        bg = Utils.roundSprite(width, height, style);
         bg.alpha = 0.75;
 
         if (height < buttonHeight)

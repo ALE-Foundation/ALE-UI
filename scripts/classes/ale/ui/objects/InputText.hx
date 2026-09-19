@@ -1,6 +1,6 @@
 package ale.ui.objects;
 
-import ale.ui.objects.Sprite;
+import ale.ui.core.Sprite;
 import ale.ui.Config;
 import ale.ui.Utils;
 
@@ -15,7 +15,7 @@ import lime.system.Clipboard;
 
 using StringTools;
 
-class InputText extends ale.ui.objects.SpriteGroup
+class InputText extends ale.ui.core.SpriteGroup
 {
     public var onSubmit:String -> Void;
 
@@ -161,7 +161,7 @@ class InputText extends ale.ui.objects.SpriteGroup
         return position = val;
     }
 
-    public function new(?x:Float, ?y:Float, ?back:String = 'Enter text...', ?def:String = '', ?hints:Array<String>, ?width:Float = 4, ?height:Float = 1, ?color:FlxColor)
+    public function new(?x:Float, ?y:Float, ?back:String = 'Enter text...', ?def:String = '', ?hints:Array<String>, ?width:Float = 4, ?height:Float = 1, ?style:RoundStyle)
     {
         super(x, y);
 
@@ -173,7 +173,7 @@ class InputText extends ale.ui.objects.SpriteGroup
 
         hints ??= [];
 
-        bg = Utils.roundMouseSprite(width, height, Utils.gray(0.5, color));
+        bg = Utils.roundMouseSprite(width, height, style);
         bg.onOverlapChange = over -> Mouse.cursor = over ? 'ibeam' : 'arrow';
 
         hintText = Utils.text(back, 0, bg.height * Config.INPUT_SIZE);

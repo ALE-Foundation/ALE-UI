@@ -2,7 +2,7 @@ package ale.ui.objects;
 
 import ale.ui.Utils;
 
-class Button extends ale.ui.objects.MouseSpriteGroup
+class Button extends ale.ui.core.MouseSpriteGroup
 {
     var bg:FlxSprite;
     var label:FlxText;
@@ -20,7 +20,7 @@ class Button extends ale.ui.objects.MouseSpriteGroup
 
 	public var callback:Void -> Void;
     
-    public function new(?x:Float, ?y:Float, ?text:String = 'Button', ?callback:Void -> Void, ?width:Float = 4, ?height:Int = 1, ?color:FlxColor)
+    public function new(?x:Float, ?y:Float, ?text:String = 'Button', ?callback:Void -> Void, ?width:Float = 4, ?height:Int = 1, ?style:RoundStyle)
     {
         super(x, y);
 
@@ -29,7 +29,7 @@ class Button extends ale.ui.objects.MouseSpriteGroup
 		width ??= 4;
 		height ??= 1;
 
-        bg = Utils.roundSprite(width, height, color);
+        bg = Utils.roundSprite(width, height, style);
 
         label = Utils.label(text, bg);
 		

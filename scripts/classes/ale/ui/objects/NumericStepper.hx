@@ -3,7 +3,9 @@ package ale.ui.objects;
 import ale.ui.objects.InputText;
 import ale.ui.objects.Button;
 
-class NumericStepper extends ale.ui.objects.SpriteGroup
+import ale.ui.Utils;
+
+class NumericStepper extends ale.ui.core.SpriteGroup
 {
     var _decimals:Int;
 
@@ -83,12 +85,27 @@ class NumericStepper extends ale.ui.objects.SpriteGroup
         height ??= 1;
         buttonWidth ??= 1;
 
-        inputText = new InputText(null, null, hint, null, null, width, height, color);
+        inputText = new InputText(null, null, hint, null, null, width, height, {
+            color: color,
+            topRight: 0,
+            bottomRight: 0
+        });
         inputText.onSubmit = val -> value = Std.parseFloat(val);
         inputText.regex = ~/[^0-9.-]/g;
 
-        minusButton = new Button(width, null, '-', () -> value -= change, buttonWidth, height, color);
-        plusButton = new Button(width + buttonWidth, null, '+', () -> value += change, buttonWidth, height, color);
+        minusButton = new Button(width, null, '-', () -> value -= change, buttonWidth, height, {
+            color: color,
+            topLeft: 0,
+            topRight: 0,
+            bottomLeft: 0,
+            bottomRight: 0
+        });
+
+        plusButton = new Button(width + buttonWidth, null, '+', () -> value += change, buttonWidth, height, {
+            color: color,
+            topLeft: 0,
+            bottomLeft: 0
+        });
 
         add(inputText);
         add(minusButton);

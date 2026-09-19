@@ -1,7 +1,8 @@
 package ale.ui.objects;
 
-import ale.ui.objects.SpriteGroup;
+import ale.ui.core.SpriteGroup;
 
+import ale.ui.Config;
 import ale.ui.Utils;
 
 class MultiTab extends ale.ui.objects.Tab
@@ -60,7 +61,14 @@ class MultiTab extends ale.ui.objects.Tab
             grp.place(index * width / groups.length, -borderHeight);
             add(grp);
 
-            final but:MouseSprite = Utils.roundMouseSprite(width / groups.length, borderHeight, null, index <= 0, index >= groups.length - 1, false, false, [Utils.dark(0.25, color), Utils.dark(0.5, color)]);
+            final but:MouseSprite = Utils.roundMouseSprite(width / groups.length, borderHeight, {
+                color: color,
+                topLeft: index <= 0 ? Config.MARGIN_SIZE : 0,
+                topRight: index >= groups.length - 1 ? Config.MARGIN_SIZE : 0,
+                bottomLeft: 0,
+                bottomRight: 0
+            });
+
             but.onPressChange = p -> if (!disabled && !p) current = id;
 
             final tit:FlxText = Utils.label(id, but);

@@ -1,4 +1,4 @@
-package ale.ui.objects;
+package ale.ui.core;
 
 import flixel.graphics.FlxGraphic;
 

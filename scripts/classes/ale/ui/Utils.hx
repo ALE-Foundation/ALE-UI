@@ -10,27 +10,22 @@ import openfl.display.Shape;
 
 import openfl.geom.Matrix;
 
-import ale.ui.objects.MouseSprite;
-import ale.ui.objects.Sprite;
+import ale.ui.core.MouseSprite;
+import ale.ui.core.Sprite;
 
 import ale.ui.Config;
 
 class Utils
 {
-    public static function roundSprite(width:Float, height:Float, ?color:FlxColor, ?topLeft:Bool, ?topRight:Bool, ?bottomLeft:Bool, ?bottomRight:Bool, ?manualGradient:Array<FlxColor>):Sprite
-        return new Sprite(0, 0, roundGraphic(width, height, color, topLeft, topRight, bottomLeft, bottomRight, manualGradient));
+    public static function roundSprite(width:Float, height:Float, ?style:RoundStyle):Sprite
+        return new Sprite(0, 0, roundGraphic(width, height, style));
 
-    public static function roundMouseSprite(width:Float, height:Float, ?color:FlxColor, ?topLeft:Bool, ?topRight:Bool, ?bottomLeft:Bool, ?bottomRight:Bool, ?manualGradient:Array<FlxColor>):Sprite
-        return new MouseSprite(0, 0, roundGraphic(width, height, color, topLeft, topRight, bottomLeft, bottomRight, manualGradient));
+    public static function roundMouseSprite(width:Float, height:Float, ?style:RoundStyle):Sprite
+        return new MouseSprite(0, 0, roundGraphic(width, height, style));
 
-    public static function roundGraphic(width:Float, height:Float, ?color:FlxColor, ?topLeft:Bool = true, ?topRight:Bool = true, ?bottomLeft:Bool = true, ?bottomRight:Bool = true, ?manualGradient:Array<FlxColor>):FlxGraphic
+    public static function roundGraphic(width:Float, height:Float, ?style:RoundStyle):FlxGraphic
     {
-        topLeft ??= true;
-        topRight ??= true;
-        bottomLeft ??= true;
-        bottomRight ??= true;
-
-        color ??= Config.COLOR;
+        style = resolveStyle(style);
 
         final size = intAdjust(width, height);
 
@@ -38,19 +33,32 @@ class Utils
 
         final matrix:Matrix = new Matrix();
         matrix.createGradientBox(size.x, size.y, Math.PI / 2);
-        
-        function roundSize(cond:Bool):Float
-            return cond ? Config.MARGIN : 0;
 
         final shape:Shape = new Shape();
-        shape.graphics.beginGradientFill(GradientType.LINEAR, manualGradient ?? [dark(0.5, color), dark(0.7, color)], [1, 1], [0, 255], matrix);
-        shape.graphics.lineStyle(Config.OUTLINE_SIZE, light(Config.OUTLINE_COLOR, color));
-        shape.graphics.drawRoundRectComplex(Config.OUTLINE_SIZE / 2, Config.OUTLINE_SIZE / 2, size.x - Config.OUTLINE_SIZE, size.y - Config.OUTLINE_SIZE, roundSize(topLeft), roundSize(topRight), roundSize(bottomLeft), roundSize(bottomRight));
+        shape.graphics.beginGradientFill(GradientType.LINEAR, style.gradient, [1, 1], [0, 255], matrix);
+        shape.graphics.lineStyle(Config.OUTLINE_SIZE, light(Config.OUTLINE_COLOR, style.color));
+        shape.graphics.drawRoundRectComplex(Config.OUTLINE_SIZE / 2, Config.OUTLINE_SIZE / 2, size.x - Config.OUTLINE_SIZE, size.y - Config.OUTLINE_SIZE, style.topLeft * Config.SIZE, style.topRight * Config.SIZE, style.bottomLeft * Config.SIZE, style.bottomRight * Config.SIZE);
         shape.graphics.endFill();
         
         bitmap.draw(shape);
 
         return FlxGraphic.fromBitmapData(bitmap);
+    }
+
+    public static function resolveStyle(style:RoundStyle):RoundStyle
+    {
+        style ??= {};
+
+        style.color ??= Config.COLOR;
+
+        style.topLeft ??= Config.MARGIN_SIZE;
+        style.topRight ??= Config.MARGIN_SIZE;
+        style.bottomLeft ??= Config.MARGIN_SIZE;
+        style.bottomRight ??= Config.MARGIN_SIZE;
+
+        style.gradient ??= [dark(0.5, style.color), dark(0.7, style.color)];
+
+        return style;
     }
 
 
@@ -128,7 +136,7 @@ class Utils
     public static function dark(percent:Float, ?a:FlxColor):FlxColor
         return mix(FlxColor.BLACK, percent, a);
 
-    public static function gray(percent, ?a:FlxColor):FlxColor
+    public static function gray(percent:Float, ?a:FlxColor):FlxColor
         return mix(FlxColor.GRAY, percent, a);
 
     public static function mix(b:FlxColor, percent:Float, ?a:FlxColor):FlxColor
