@@ -1,4 +1,4 @@
-import ale.ui.objects.Tab;
+import ale.ui.objects.NumericStepper;
 
 // OLD ALE UI SHIT
 
@@ -19,5 +19,5 @@ if (CoolVars.tactile)
 
 // :3
 
-final obj = new Tab();
+final obj = new NumericStepper();
 add(obj);

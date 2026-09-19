@@ -51,6 +51,9 @@ class NumericStepper extends ale.ui.core.SpriteGroup
     public var value(default, set):Float;
     function set_value(val:Float):Float
     {
+        if (Math.isNaN(val))
+            val = min;
+
         val = FlxMath.bound(val, min, max);
 
         val = FlxMath.roundDecimal(val, _decimals);
