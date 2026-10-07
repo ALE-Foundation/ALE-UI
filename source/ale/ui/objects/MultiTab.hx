@@ -16,6 +16,8 @@ class MultiTab extends Tab
 
     var _groups:Map<String, SpriteGroup> = new Map<String, SpriteGroup>();
 
+    public var callback:String -> Void;
+
     public var current(default, set):String;
     function set_current(value:String)
     {
@@ -27,6 +29,9 @@ class MultiTab extends Tab
 
             grp.active = grp.visible = id == value;
         }
+
+        if (callback != null)
+            callback(value);
 
         return current = value;
     }

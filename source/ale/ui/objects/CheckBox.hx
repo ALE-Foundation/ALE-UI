@@ -12,8 +12,6 @@ class CheckBox extends ale.ui.core.SpriteGroup
     var button:MouseSprite;
     var label:Text;
 
-    public var callback:Bool -> Void;
-
     public var disabled(default, set):Bool;
     function set_disabled(val:Bool):Bool
     {
@@ -27,6 +25,8 @@ class CheckBox extends ale.ui.core.SpriteGroup
         return disabled;
     }
     
+    public var callback:Bool -> Void;
+
     public var value(default, set):Bool;
     function set_value(val:Bool):Bool
     {

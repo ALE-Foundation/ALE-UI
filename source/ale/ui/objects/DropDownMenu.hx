@@ -69,6 +69,8 @@ class DropDownMenu extends SpriteGroup
         return disabled;
     }
 
+    public var callback:String -> Void;
+
     public var value(default, set):String;
     function set_value(val:String):String
     {
@@ -78,12 +80,15 @@ class DropDownMenu extends SpriteGroup
 
         updateTarget(value);
 
+        if (callback != null)
+            callback(value);
+
         return value;
     }
 
     final uWidth:Int;
     final uHeight:Int;
-    final uColor:Int;
+    final uColor:FlxColor;
 
     public function new(?x:Float, ?y:Float, ?options:Array<String>, ?initial:String, ?hint:String = 'Enter option...', ?width:Int = 3, ?height:Int = 1, ?buttonWidth:Int = 1, ?color:FlxColor)
     {
@@ -91,7 +96,7 @@ class DropDownMenu extends SpriteGroup
 
         uWidth = width;
         uHeight = height;
-        uColor = color;
+        uColor = color ?? Config.COLOR;
 
         buttons = new SpriteGroup(0, height);
         add(buttons);

@@ -35,6 +35,8 @@ class Slider extends ale.ui.core.SpriteGroup
         return max;
     }
 
+    public var callback:Float -> Void;
+
     public var value(default, set):Float;
     function set_value(val:Float):Float
     {
@@ -52,6 +54,9 @@ class Slider extends ale.ui.core.SpriteGroup
         label.x = button.x + button.width / 2 - label.width / 2;
 
         updateTarget(value);
+
+        if (callback != null)
+            callback(value);
 
         return value;
     }

@@ -45,6 +45,8 @@ class NumericStepper extends ale.ui.core.SpriteGroup
         return max;
     }
 
+    public var callback:Float -> Void;
+
     public var value(default, set):Float;
     function set_value(val:Float):Float
     {
@@ -63,6 +65,9 @@ class NumericStepper extends ale.ui.core.SpriteGroup
         plusButton.disabled = value >= max;
 
         updateTarget(value);
+
+        if (callback != null)
+            callback(value);
 
         return value;
     }

@@ -43,6 +43,8 @@ class InputText extends ale.ui.core.SpriteGroup
         return regex;
     }
 
+    public var callback:String -> Void;
+
     public var value(default, set):String;
     function set_value(val:String):String
     {
@@ -58,6 +60,9 @@ class InputText extends ale.ui.core.SpriteGroup
         updateHint();
 
         updateTarget(value);
+
+        if (callback != null)
+            callback(value);
 
         return value;
     }
