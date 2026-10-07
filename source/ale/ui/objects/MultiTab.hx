@@ -53,10 +53,6 @@ class MultiTab extends Tab
 
         groups ??= ['A', 'B', 'C'];
 
-        width ??= 8;
-        height ??= 6;
-        borderHeight ??= 1;
-
         groups = Utils.deleteDuplicates(groups);
 
         for (index => id in groups)

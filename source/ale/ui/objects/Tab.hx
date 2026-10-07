@@ -40,12 +40,6 @@ class Tab extends ale.ui.core.SpriteGroup
 
     public function new(?x:Float, ?y:Float, ?text:String = 'Tab', ?width:Float = 8, ?height:Float = 6, ?borderHeight:Float = 1, ?color:FlxColor)
     {
-        text ??= 'Tab';
-
-        width ??= 8;
-        height ??= 6;
-        borderHeight ??= 1;
-
         border = Utils.roundMouseSprite(width, borderHeight, {
             color: color,
             bottomLeft: 0,

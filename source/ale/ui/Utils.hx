@@ -18,10 +18,16 @@ import ale.ui.core.MouseSprite;
 import ale.ui.core.Sprite;
 import ale.ui.core.Text;
 
+import ale.ui.objects.InputText;
+
 import ale.ui.Config;
 
 class Utils
 {
+    public static var usingInputs(get, never):Bool;
+    static function get_usingInputs():Bool
+        @:privateAccess return InputText.typingCount > 0;
+
     public static function roundSprite(width:Float, height:Float, ?style:RoundStyle):Sprite
         return new Sprite(0, 0, roundGraphic(width, height, style));
 
@@ -50,7 +56,7 @@ class Utils
         return FlxGraphic.fromBitmapData(bitmap);
     }
 
-    public static function resolveStyle(style:RoundStyle):RoundStyle
+    public static function resolveStyle(style:Null<RoundStyle>):RoundStyle
     {
         style ??= {};
 
@@ -78,8 +84,6 @@ class Utils
 
     public static function label(?lab:String = 'Label', follow:FlxObject):Text
     {
-        lab ??= 'Label';
-
         final text:Text = text(lab, follow.width, Math.min(follow.width, follow.height) * Config.FONT_SIZE);
         text.alignment = 'center';
 
@@ -115,6 +119,26 @@ class Utils
 
             return true;
         });
+    }
+
+
+    public static function place(obj:FlxObject, ?uX:Float, ?uY:Float, ?right:Bool = false, ?down:Bool = false)
+    {
+        if (uX != null)
+        {
+            obj.x = uX * Config.SIZE;
+
+            if (right)
+                obj.x = (obj.camera?.width ?? FlxG.width) - obj.width - obj.x;
+        }
+
+        if (uY != null)
+        {
+            obj.y = uY * Config.SIZE;
+
+            if (down)
+                obj.y = (obj.camera?.height ?? FlxG.height) - obj.height - obj.y;
+        }
     }
 
 

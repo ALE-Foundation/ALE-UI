@@ -15,9 +15,9 @@ class MouseSpriteGroup extends SpriteGroup implements ale.ui.interfaces.IMouse
 	public var pressCallback:Void -> Void;
 	public var releaseCallback:Void -> Void;
 
-	override function uiUpdate(elapsed:Float)
+	override function update(elapsed:Float)
 	{
-		super.uiUpdate(elapsed);
+		super.update(elapsed);
 
 		final newOverlaped:Bool = FlxG.mouse.overlaps(this, cameras[0]);
 

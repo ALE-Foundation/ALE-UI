@@ -9,9 +9,9 @@
         "ale"
     ],
     "description": "Addons Library for Interface Making",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "classPath": "source/",
-    "releasenote": "",
+    "releasenote": "Code cleanup, removal of repetitive copy-and-paste sections, a slightly improved README, and a few other minor changes",
     "contributors": [
         "AlejoGDOfficial"
     ]

@@ -7,7 +7,7 @@ import ale.ui.core.Text;
 
 import ale.ui.Utils;
 
-class CheckBox extends ale.ui.core.SpriteGroup
+class CheckBox extends ale.ui.core.ValueGroup<Bool>
 {
     var button:MouseSprite;
     var label:Text;
@@ -25,21 +25,13 @@ class CheckBox extends ale.ui.core.SpriteGroup
         return disabled;
     }
     
-    public var callback:Bool -> Void;
-
-    public var value(default, set):Bool;
-    function set_value(val:Bool):Bool
+    override function set_value(val:Bool):Bool
     {
         value = val;
 
         brightness = value ? 0.5 : 0;
 
-        updateTarget(value);
-
-        if (callback != null)
-            callback(value);
-        
-        return value;
+        return super.set_value(value);
     }
 
     public function new(?x:Float, ?y:Float, ?lab:String = 'CheckBox', ?width:Int = 1, ?height:Int = 1, ?style:RoundStyle)

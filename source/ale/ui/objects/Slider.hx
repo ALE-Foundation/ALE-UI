@@ -11,7 +11,7 @@ import ale.ui.core.Sprite;
 import ale.ui.core.Text;
 import ale.ui.Utils;
 
-class Slider extends ale.ui.core.SpriteGroup
+class Slider extends ale.ui.core.ValueGroup<Float>
 {
     public var min(default, set):Float;
     function set_min(val:Float):Float
@@ -35,10 +35,7 @@ class Slider extends ale.ui.core.SpriteGroup
         return max;
     }
 
-    public var callback:Float -> Void;
-
-    public var value(default, set):Float;
-    function set_value(val:Float):Float
+    override function set_value(val:Float):Float
     {
         val = FlxMath.bound(val, min, max);
 
@@ -53,12 +50,7 @@ class Slider extends ale.ui.core.SpriteGroup
 
         label.x = button.x + button.width / 2 - label.width / 2;
 
-        updateTarget(value);
-
-        if (callback != null)
-            callback(value);
-
-        return value;
+        return super.set_value(value);
     }
 
     public var decimal(default, set):Bool;
@@ -76,18 +68,6 @@ class Slider extends ale.ui.core.SpriteGroup
 
     public function new(?x:Float, ?y:Float, ?min:Float = -1, ?max:Float = 1, ?def:Float = 0, ?decimal:Bool = true, ?width:Float = 4, ?height:Float = 0.5, ?buttonWidth:Float = 1, ?buttonHeight:Float = 1, ?style:RoundStyle)
     {
-        min ??= -1;
-        max ??= 1;
-
-        width ??= 4;
-        height ??= 0.5;
-        buttonWidth ??= 1;
-        buttonHeight ??= 1;
-
-        decimal ??= true;
-
-        def ??= 0;
-
         super(x, y);
 
         button = Utils.roundMouseSprite(buttonWidth, buttonHeight, style);

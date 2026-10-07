@@ -5,7 +5,7 @@ import flixel.math.FlxMath;
 
 import ale.ui.Utils;
 
-class NumericStepper extends ale.ui.core.SpriteGroup
+class NumericStepper extends ale.ui.core.ValueGroup<Float>
 {
     var _decimals:Int;
 
@@ -45,10 +45,7 @@ class NumericStepper extends ale.ui.core.SpriteGroup
         return max;
     }
 
-    public var callback:Float -> Void;
-
-    public var value(default, set):Float;
-    function set_value(val:Float):Float
+    override function set_value(val:Float):Float
     {
         if (Math.isNaN(val))
             val = min;
@@ -64,28 +61,12 @@ class NumericStepper extends ale.ui.core.SpriteGroup
         minusButton.disabled = value <= min;
         plusButton.disabled = value >= max;
 
-        updateTarget(value);
-
-        if (callback != null)
-            callback(value);
-
-        return value;
+        return super.set_value(value);
     }
 
     public function new(?x:Float, ?y:Float, ?min:Float = 0, ?max:Float = 100, ?def:Float = 0, ?change:Float = 1, ?hint:String = 'Enter number...', ?width:Int = 2, ?height:Int = 1, ?buttonWidth:Int = 1, ?color:FlxColor)
     {
         super(x, y);
-
-        hint ??= 'Enter number...';
-
-        min ??= 0;
-        max ??= 100;
-        def ??= 0;
-        change ??= 1;
-
-        width ??= 3;
-        height ??= 1;
-        buttonWidth ??= 1;
 
         inputText = new InputText(null, null, hint, null, null, width, height, {
             color: color,

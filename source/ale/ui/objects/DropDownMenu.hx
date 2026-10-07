@@ -15,7 +15,7 @@ import flixel.util.FlxColor;
 
 import flixel.FlxG;
 
-class DropDownMenu extends SpriteGroup
+class DropDownMenu extends ale.ui.core.ValueGroup<String>
 {
     var inputText:InputText;
 
@@ -69,21 +69,13 @@ class DropDownMenu extends SpriteGroup
         return disabled;
     }
 
-    public var callback:String -> Void;
-
-    public var value(default, set):String;
-    function set_value(val:String):String
+    override function set_value(val:String):String
     {
         value = val;
 
         inputText.value = value;
 
-        updateTarget(value);
-
-        if (callback != null)
-            callback(value);
-
-        return value;
+        return super.set_value(value);
     }
 
     final uWidth:Int;

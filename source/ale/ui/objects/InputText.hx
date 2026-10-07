@@ -19,7 +19,7 @@ import lime.system.Clipboard;
 
 using StringTools;
 
-class InputText extends ale.ui.core.SpriteGroup
+class InputText extends ale.ui.core.ValueGroup<String>
 {
     static var typingCount(default, set):Int = 0;
     static function set_typingCount(val:Int):Int
@@ -43,10 +43,7 @@ class InputText extends ale.ui.core.SpriteGroup
         return regex;
     }
 
-    public var callback:String -> Void;
-
-    public var value(default, set):String;
-    function set_value(val:String):String
+    override function set_value(val:String):String
     {
         if (regex != null)
             val = regex.replace(val, '');
@@ -59,12 +56,7 @@ class InputText extends ale.ui.core.SpriteGroup
 
         updateHint();
 
-        updateTarget(value);
-
-        if (callback != null)
-            callback(value);
-
-        return value;
+        return super.set_value(value);
     }
 
     public var bg:MouseSprite;
@@ -168,12 +160,6 @@ class InputText extends ale.ui.core.SpriteGroup
     public function new(?x:Float, ?y:Float, ?back:String = 'Enter text...', ?def:String = '', ?hints:Array<String>, ?width:Float = 4, ?height:Float = 1, ?style:RoundStyle)
     {
         super(x, y);
-
-        back ??= 'Enter text...';
-        def ??= '';
-        
-        width ??= 4;
-        height ??= 1;
 
         hints ??= [];
 

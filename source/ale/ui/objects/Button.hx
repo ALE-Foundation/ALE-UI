@@ -28,11 +28,6 @@ class Button extends ale.ui.core.MouseSpriteGroup
     {
         super(x, y);
 
-		text ??= 'Button';
-		
-		width ??= 4;
-		height ??= 1;
-
         bg = Utils.roundSprite(width, height, style);
 
         label = Utils.label(text, bg);
