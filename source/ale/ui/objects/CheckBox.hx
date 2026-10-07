@@ -57,7 +57,7 @@ class CheckBox extends ale.ui.core.SpriteGroup
         add(button);
 
         label = Utils.text(lab, 0, button.height * (1 - Config.MARGIN_SIZE));
-        label.x = button.x + button.width + Config.MARGIN;
+        label.x = button.width + Config.MARGIN;
         add(label);
     }
 }

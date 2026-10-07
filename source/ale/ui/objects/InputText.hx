@@ -21,6 +21,16 @@ using StringTools;
 
 class InputText extends ale.ui.core.SpriteGroup
 {
+    static var typingCount(default, set):Int = 0;
+    static function set_typingCount(val:Int):Int
+    {
+        typingCount = Std.int(Math.max(val, 0));
+
+        FlxG.stage.window.textInputEnabled = typingCount > 0;
+
+        return typingCount;
+    }
+
     public var onSubmit:String -> Void;
 
     public var regex(default, set):EReg;
@@ -91,10 +101,16 @@ class InputText extends ale.ui.core.SpriteGroup
         return disabled = val;
     }
 
-    public var typing(default, set):Bool;
+    public var typing(default, set):Bool = false;
     function set_typing(val:Bool):Bool
     {
-        FlxG.stage.window.textInputEnabled = val;
+        if (typing != val)
+        {
+            if (val)
+                typingCount++;
+            else
+                typingCount--;
+        }
 
         cursor.visible = cursor.alive = val;
 
@@ -422,12 +438,12 @@ class InputText extends ale.ui.core.SpriteGroup
 
     override function destroy()
     {
+        typing = false;
+        
         super.destroy();
         
         FlxG.stage.removeEventListener('keyDown', onKeyDown, false);
 		
 		FlxG.stage.window.onTextInput.remove(onTextInput);
-
-        typing = false;
     }
 }
