@@ -1,13 +1,11 @@
-package ale.ui;
+package ale.ui.interfaces;
 
-interface MouseObject
+interface IMouse
 {
     public var overlaped:Bool;
-
     public var onOverlapChange:Bool -> Void;
 
     public var pressed:Bool;
-
     public var onPressChange:Bool -> Void;
 
     public var pressCallback:Void -> Void;

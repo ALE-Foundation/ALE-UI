@@ -1,8 +1,8 @@
-package ale.ui;
+package ale.ui.core;
 
-import ale.ui.UISprite;
+import flixel.FlxG;
 
-class MouseSprite extends UISprite implements MouseObject
+class MouseSpriteGroup extends SpriteGroup implements ale.ui.interfaces.IMouse
 {
 	public var overlaped:Bool = false;
 
@@ -19,14 +19,14 @@ class MouseSprite extends UISprite implements MouseObject
 	{
 		super.uiUpdate(elapsed);
 
-		var newOverlaped:Bool = FlxG.mouse.overlaps(this, cameras[0]);
+		final newOverlaped:Bool = FlxG.mouse.overlaps(this, cameras[0]);
 
 		if (newOverlaped != overlaped)
             overlapCallbackHandler(newOverlaped);
 
 		overlaped = newOverlaped;
 
-		var newPressed:Bool = (newOverlaped && FlxG.mouse.justPressed) || (pressed && !FlxG.mouse.justReleased);
+		final newPressed:Bool = (newOverlaped && FlxG.mouse.justPressed) || (pressed && !FlxG.mouse.justReleased);
 
 		if (newPressed != pressed)
             pressCallbackHandler(newPressed);

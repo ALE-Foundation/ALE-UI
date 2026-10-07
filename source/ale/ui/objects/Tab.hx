@@ -1,0 +1,130 @@
+package ale.ui.objects;
+
+import ale.ui.core.MouseSprite;
+import ale.ui.core.Sprite;
+import ale.ui.core.Text;
+
+import ale.ui.Config;
+import ale.ui.Utils;
+
+import flixel.math.FlxPoint;
+import flixel.util.FlxColor;
+
+import flixel.FlxG;
+
+class Tab extends ale.ui.core.SpriteGroup
+{
+    var border:MouseSprite;
+    var title:Text;
+
+    var bg:Sprite;
+
+    public var movable(default, set):Bool;
+    function set_movable(value:Bool):Bool
+    {
+        if (!value)
+        {
+            snap();
+
+            _moving = false;
+        }
+
+        return movable = value;
+    }
+
+    var _moving:Bool = false;
+
+    var _mouseOffset:FlxPoint = FlxPoint.get();
+
+    var _target:FlxPoint = FlxPoint.get();
+
+    public function new(?x:Float, ?y:Float, ?text:String = 'Tab', ?width:Float = 8, ?height:Float = 6, ?borderHeight:Float = 1, ?color:FlxColor)
+    {
+        text ??= 'Tab';
+
+        width ??= 8;
+        height ??= 6;
+        borderHeight ??= 1;
+
+        border = Utils.roundMouseSprite(width, borderHeight, {
+            color: color,
+            bottomLeft: 0,
+            bottomRight: 0
+        });
+
+        border.place(null, -borderHeight);
+        border.onPressChange = pressed -> {
+            if (!movable)
+                return;
+
+            _moving = pressed;
+
+            if (_moving)
+            {
+                final pos = FlxG.mouse.getViewPosition(camera);
+
+                _mouseOffset.x = pos.x - this.x;
+                _mouseOffset.y = pos.y - this.y;
+            } else {
+                snap();
+            }
+        };
+
+        super(x, y);
+
+        title = Utils.label(text, border);
+
+        bg = Utils.roundSprite(width, height, {
+            color: Utils.dark(0.75, color),
+            topLeft: 0,
+            topRight: 0
+        });
+
+        add(border);
+        add(title);
+        add(bg);
+
+        movable = true;
+    }
+
+    override function update(elapsed:Float)
+    {
+        if (_moving)
+        {
+            final pos = FlxG.mouse.getViewPosition(camera);
+
+            _target.x = Utils.snap(pos.x - _mouseOffset.x, Config.SIZE);
+            _target.y = Utils.snap(pos.y - _mouseOffset.y, Config.SIZE);
+
+            x = Utils.lerp(x, _target.x, 0.5);
+            y = Utils.lerp(y, _target.y, 0.5);
+        }
+
+        super.update(elapsed);
+    }
+
+    function snap()
+    {
+        x = _target.x;
+        y = _target.y;
+
+        if (x <= -border.width)
+            x = -border.width + Config.SIZE;
+
+        if (x >= FlxG.width)
+            x = FlxG.width - Config.SIZE;
+
+        if (y <= 0)
+            y = Config.SIZE;
+
+        if (y >= FlxG.height + Config.SIZE)
+            y = FlxG.height;
+    }
+
+    override function place(?uX:Float, ?uY:Float, ?right:Bool = false, ?down:Bool = false)
+    {
+        super.place(uX, uY, right, down);
+
+        y += border.height;
+    }
+}

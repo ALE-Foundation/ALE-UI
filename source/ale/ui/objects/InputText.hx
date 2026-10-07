@@ -1,0 +1,433 @@
+package ale.ui.objects;
+
+import ale.ui.structures.RoundStyle;
+import ale.ui.core.MouseSprite;
+import ale.ui.core.Sprite;
+import ale.ui.core.Text;
+import ale.ui.Config;
+import ale.ui.Utils;
+
+import flixel.input.keyboard.FlxKey;
+import flixel.math.FlxRect;
+import flixel.math.FlxMath;
+import flixel.FlxG;
+
+import openfl.events.KeyboardEvent;
+import openfl.ui.Mouse;
+
+import lime.system.Clipboard;
+
+using StringTools;
+
+class InputText extends ale.ui.core.SpriteGroup
+{
+    public var onSubmit:String -> Void;
+
+    public var regex(default, set):EReg;
+    function set_regex(val:EReg):EReg
+    {
+        regex = val;
+
+        value = value;
+
+        return regex;
+    }
+
+    public var value(default, set):String;
+    function set_value(val:String):String
+    {
+        if (regex != null)
+            val = regex.replace(val, '');
+
+        val ??= '';
+
+        text.text = val;
+
+        value = val;
+
+        updateHint();
+
+        updateTarget(value);
+
+        return value;
+    }
+
+    public var bg:MouseSprite;
+
+    var hintText:Text;
+    var text:Text;
+
+    var cursor:Sprite;
+
+    public var hint(default, set):String;
+    function set_hint(val:String):String
+    {
+        hint = val;
+
+        updateHint();
+
+        return val;
+    }
+
+    public var hints(default, set):Array<String>;
+    function set_hints(val:Array<String>):Array<String>
+    {
+        hints = val;
+
+        updateHint();
+
+        return hints;
+    }
+
+    public var currentHint:Null<String>;
+
+    public var disabled(default, set):Bool;
+    function set_disabled(val:Bool):Bool
+    {
+        typing = false;
+
+        brightness = val ? -0.5 : 0;
+
+        return disabled = val;
+    }
+
+    public var typing(default, set):Bool;
+    function set_typing(val:Bool):Bool
+    {
+        FlxG.stage.window.textInputEnabled = val;
+
+        cursor.visible = cursor.alive = val;
+
+        timer = 0.5;
+
+        return typing = val;
+    }
+
+    public var position(default, set):Int;
+    function set_position(val:Int):Int
+    {
+        val = Std.int(FlxMath.bound(val, 0, value.length));
+
+        cursor.visible = cursor.alive;
+        timer = 0.5;
+
+        final left:Float = bg.x + Config.MARGIN;
+        final right:Float = bg.x + bg.width - Config.MARGIN;
+
+        final pos:Float = text.x + (value.length <= 0 ? 0 : val >= value.length ? text.width : text.textField.getCharBoundaries(val).x);
+
+        cursor.x = pos - cursor.width / 2;
+
+        var diff:Float = 0;
+
+        if (pos < left)
+            diff = left - pos;
+        else if (pos > right)
+            diff = right - pos;
+
+        if (text.width > right - left)
+        {
+            final newX:Float = text.x + diff;
+
+            final maxX:Float = right - text.width;
+
+            if (newX < maxX)
+                diff += maxX - newX;
+        }
+
+        cursor.x += diff;
+        text.x += diff;
+        hintText.x = text.x;
+
+        hintText.clipRect.x = text.clipRect.x = left - text.x;
+
+        return position = val;
+    }
+
+    public function new(?x:Float, ?y:Float, ?back:String = 'Enter text...', ?def:String = '', ?hints:Array<String>, ?width:Float = 4, ?height:Float = 1, ?style:RoundStyle)
+    {
+        super(x, y);
+
+        back ??= 'Enter text...';
+        def ??= '';
+        
+        width ??= 4;
+        height ??= 1;
+
+        hints ??= [];
+
+        bg = Utils.roundMouseSprite(width, height, style);
+        bg.onOverlapChange = over -> Mouse.cursor = over ? 'ibeam' : 'arrow';
+
+        hintText = Utils.text(back, 0, bg.height * Config.INPUT_SIZE);
+        hintText.alpha = 0.5;
+
+        text = Utils.text('', 0, bg.height * Config.INPUT_SIZE);
+
+        hintText.clipRect = FlxRect.get(0, 0, bg.width - Config.MARGIN * 2, hintText.frameHeight);
+        text.clipRect = FlxRect.get(0, 0, bg.width - Config.MARGIN * 2, text.frameHeight);
+
+        cursor = new Sprite();
+        cursor.makeGraphic(Std.int(Config.CURSOR_SIZE), Std.int(bg.height - Config.MARGIN));
+        cursor.alpha = 0.75;
+
+        for (obj in [hintText, text, cursor])
+            obj.setPosition(Config.MARGIN, bg.height / 2 - obj.height / 2);
+
+        add(bg);
+        add(hintText);
+        add(text);
+        add(cursor);
+
+        FlxG.stage.addEventListener('keyDown', onKeyDown, false, 1);
+
+		FlxG.stage.window.onTextInput.add(onTextInput);
+
+        hint = back;
+
+        this.hints = hints;
+
+        value = def;
+        position = value.length;
+
+        typing = false;
+    }
+
+    var timer:Float = 0.5;
+
+    override function update(elapsed:Float)
+    {
+        super.update(elapsed);
+
+        if (disabled)
+            return;
+
+        if (FlxG.mouse.justPressed)
+        {
+            final oldTyping:Bool = typing;
+
+            typing = bg.overlaped;
+
+            if (typing)
+            {
+                if (value.length > 0)
+                {
+                    #if mobile
+                    position = value.length;
+                    #else
+                    final diff:Float = FlxG.mouse.getViewPosition(camera).x - text.x;
+                    
+                    final pos:Int = text.textField.getCharIndexAtPoint(diff, text.y + 1);
+
+                    position = pos <= -1 && diff > 0 ? value.length : pos;
+                    #end
+                } else {
+                    position = 0;
+                }
+            } else if (oldTyping)
+                submit();
+        }
+
+        if (cursor.alive)
+            if (timer > 0)
+            {
+                timer -= elapsed;
+            } else {
+                cursor.visible = !cursor.visible;
+
+                timer = 0.5;
+            }
+    }
+
+    function submit()
+        if (onSubmit != null)
+            onSubmit(value);
+
+    function isWord(code:Int):Bool
+        return (code >= '0'.code && code <= '9'.code) || (code >= 'A'.code && code <= 'Z'.code) || (code >= 'a'.code && code <= 'z'.code);
+        
+    function isSpace(code:Int):Bool
+        return code == ' '.code || code == '\t'.code || code == '\n'.code || code == '\r'.code;
+        
+    function isSymbol(code:Int):Bool
+        return !isWord(code) && !isSpace(code);
+
+    var regexes(get, never):Array<Int -> Bool>;
+    function get_regexes():Array<Int -> Bool>
+        return [isWord, isSpace, isSymbol];
+
+    function onKeyDown(e:KeyboardEvent)
+    {
+        if (!typing)
+            return;
+
+        switch (e.keyCode)
+        {
+            case FlxKey.ENTER, FlxKey.ESCAPE:
+                typing = false;
+
+                submit();
+
+            case FlxKey.HOME:
+                position = 0;
+
+            case FlxKey.END:
+                position = value.length;
+
+            case FlxKey.TAB:
+                if (currentHint == null)
+                {
+                    insertText(Config.TAB);
+                } else {
+                    value = currentHint;
+
+                    position = value.length;
+                }
+
+            case FlxKey.BACKSPACE:
+                if (value.length > 0 && position > 0)
+                {
+                    if (e.ctrlKey && position > 1)
+                    {
+                        final end:Int = scan(true);
+
+                        value = value.substring(0, end) + value.substring(position);
+
+                        position = end;
+                    } else {
+                        value = value.substring(0, position - 1) + value.substring(position);
+
+                        position--;
+                    }
+                }
+
+            case FlxKey.DELETE:
+                if (value.length > 0 && position < value.length)
+                    value = value.substring(0, position) + value.substring(e.ctrlKey && position < value.length ? scan(false) : (position + 1));
+
+            case FlxKey.LEFT:
+                if (e.ctrlKey)
+                    position = scan(true);
+                else
+                    position--;
+
+            case FlxKey.RIGHT:
+                if (e.ctrlKey)
+                    position = scan(false);
+                else
+                    position++;
+
+            case FlxKey.C:
+                if (e.ctrlKey)
+                    Clipboard.text = value;
+
+            case FlxKey.V:
+                if (e.ctrlKey)
+                    insertText(~/(?:\s)/.replace(Clipboard.text, ' '));
+
+            default:
+        }
+    }
+
+    function updateHint()
+    {
+        currentHint = null;
+
+        if (value == null || value.length <= 0)
+        {
+            hintText.text = hint ?? '';
+
+            return;
+        }
+
+        for (hint in hints)
+            if (hint.startsWith(value))
+            {
+                hintText.text = currentHint = hint;
+
+                return;
+            }
+
+        hintText.text = '';
+    }
+
+    function getRegex(code:Int)
+    {
+        for (reg in regexes)
+            if (reg(code))
+                return reg;
+
+        return null;
+    }
+
+    function scan(left:Bool):Int
+    {
+        var end = position;
+        var index = left ? position - 1 : position;
+
+        if (index < 0 || index >= value.length)
+            return position;
+
+        var code = value.fastCodeAt(index);
+
+        var reg = getRegex(code);
+
+        end += left ? -1 : 1;
+
+        if (isSpace(code))
+        {
+            index += left ? -1 : 1;
+
+            if (index < 0 || index >= value.length)
+                return end;
+
+            code = value.fastCodeAt(index);
+
+            if (!isSpace(code))
+            {
+                reg = getRegex(code);
+
+                end += left ? -1 : 1;
+            }
+        }
+
+        if (reg == null)
+            return end;
+
+        while (true)
+        {
+            index = left ? end - 1 : end;
+
+            if (index < 0 || index >= value.length || !reg(value.fastCodeAt(index)))
+                break;
+
+            end += left ? -1 : 1;
+        }
+
+        return end;
+    }
+
+	function onTextInput(toAdd:String)
+        insertText(toAdd);
+
+    function insertText(toAdd:String)
+    {
+        if (!typing)
+            return;
+
+        value = value.substring(0, position) + toAdd + value.substring(position);
+
+        position += toAdd.length;
+    }
+
+    override function destroy()
+    {
+        super.destroy();
+        
+        FlxG.stage.removeEventListener('keyDown', onKeyDown, false);
+		
+		FlxG.stage.window.onTextInput.remove(onTextInput);
+
+        typing = false;
+    }
+}

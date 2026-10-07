@@ -6,11 +6,10 @@
         "flixel",
         "addons",
         "ui",
-        "ale",
-        "ale-psych"
+        "ale"
     ],
-    "description": "Addons Library for Interface Making (Designed for ALE Psych)",
-    "version": "1.0.8",
+    "description": "Addons Library for Interface Making",
+    "version": "2.0.0",
     "classPath": "source/",
     "releasenote": "",
     "contributors": [

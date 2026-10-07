@@ -1,0 +1,68 @@
+package ale.ui.objects;
+
+import ale.ui.structures.RoundStyle;
+
+import ale.ui.core.Sprite;
+import ale.ui.core.Text;
+
+import ale.ui.Utils;
+
+import flixel.FlxG;
+
+class Button extends ale.ui.core.MouseSpriteGroup
+{
+    public var bg:Sprite;
+    public var label:Text;
+
+	public var disabled(default, set):Bool;
+	public function set_disabled(value:Bool):Bool
+	{
+		brightness = value ? -0.5 : 0;
+		
+		return disabled = value;
+	}
+
+	public var callback:Void -> Void;
+    
+    public function new(?x:Float, ?y:Float, ?text:String = 'Button', ?callback:Void -> Void, ?width:Float = 4, ?height:Int = 1, ?style:RoundStyle)
+    {
+        super(x, y);
+
+		text ??= 'Button';
+		
+		width ??= 4;
+		height ??= 1;
+
+        bg = Utils.roundSprite(width, height, style);
+
+        label = Utils.label(text, bg);
+		
+        add(bg);
+        add(label);
+
+		this.callback = callback;
+    }
+
+	override function overlapCallbackHandler(over:Bool)
+	{
+		if (disabled)
+			return;
+		
+		brightness = over ? 0.25 : 0;
+		
+		super.overlapCallbackHandler(over);
+	}
+
+	override function pressCallbackHandler(pressed:Bool)
+	{
+		if (disabled)
+			return;
+		
+		brightness = pressed ? -0.25 : 0;
+		
+		super.pressCallbackHandler(pressed);
+
+		if (!pressed && callback != null)
+			callback();
+	}
+}
