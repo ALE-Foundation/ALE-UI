@@ -375,7 +375,7 @@ class InputText extends ale.ui.core.ValueGroup<String>
         if (index < 0 || index >= value.length)
             return position;
 
-        var code = value.fastCodeAt(index);
+        var code:Int = value.fastCodeAt(index);
 
         var reg = getRegex(code);
 

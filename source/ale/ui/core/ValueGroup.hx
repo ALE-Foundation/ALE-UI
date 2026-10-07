@@ -2,6 +2,7 @@ package ale.ui.core;
 
 import flixel.util.typeLimit.OneOfTwo;
 
+@:generic
 class ValueGroup<T> extends SpriteGroup
 {
     var _uiTarget:Dynamic;
